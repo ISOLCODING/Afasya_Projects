@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 
 import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
-import Hero from '@/components/sections/Hero';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ServiceCard from '@/components/ui/ServiceCard';
 import PortfolioCard from '@/components/ui/PortfolioCard';
@@ -19,6 +18,7 @@ import TeamCard from '@/components/ui/TeamCard';
 import BlogCard from '@/components/ui/BlogCard';
 import ContentBlocks from '@/components/sections/ContentBlocks';
 import BrandScroller from '@/components/sections/BrandScroller';
+import Hero from '@/components/sections/Hero';
 import { getServices, getPortfolios, getSettings, getPage, getTeam, getPosts } from '@/lib/api';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
@@ -132,17 +132,17 @@ const Home = () => {
             /* DEFAULT LAYOUT - dengan data dinamis dari API */
             <>
                {/* Hero Section */}
-               {/* <Hero
+                  <Hero
                   title={siteTitle}
                   description={siteDesc}
                   image="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070"
-               /> */}
+                  />
 
                <BrandScroller />
 
                {/* Debug Info */}
                {debugMode && (
-                  <div className="fixed top-20 right-4 z-50 bg-secondary-900 border border-primary-500/30 text-white p-4 rounded-2xl shadow-2xl max-w-xs backdrop-blur-xl bg-opacity-90">
+                     <div className="fixed top-20 right-4 z-50 bg-primary-950/90 border border-primary-500/30 text-white p-4 rounded-2xl shadow-2xl max-w-xs backdrop-blur-xl">
                      <div className="text-sm font-display font-bold mb-3 flex items-center gap-2 border-b border-white/10 pb-2">
                         <span className="text-primary-400">📊</span> DATA STATUS
                      </div>
@@ -545,9 +545,9 @@ const Home = () => {
                {/* Stats Section */}
                <Section background="dark" className="relative overflow-hidden">
                   {/* Background decoration for stats */}
-                  <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-600 rounded-full blur-[150px]" />
-                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-600 rounded-full blur-[150px]" />
+                     <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500 rounded-full blur-[150px]" />
+                        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary-500 rounded-full blur-[150px]" />
                   </div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
@@ -565,13 +565,13 @@ const Home = () => {
                            transition={{ delay: idx * 0.1 }}
                            whileHover={{ y: -10, transition: { duration: 0.2 } }}
                            className={cn(
-                              "relative group p-8 rounded-[40px] border border-white/5 bg-white/5 backdrop-blur-xl transition-all duration-500 overflow-hidden text-center",
-                              "hover:border-white/20 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                              "relative group p-8 glass-card bg-white/5 backdrop-blur-xl transition-all duration-500 overflow-hidden text-center",
+                              "hover:border-primary-500/30 hover:shadow-glow"
                            )}
                         >
                            {/* Glow effect on hover */}
                            <div className={cn(
-                              "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10",
+                              "absolute inset-0 bg-linear-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10",
                               stat.color
                            )} />
 
@@ -590,7 +590,7 @@ const Home = () => {
                            </p>
 
                            {/* 3D Reflection Effect */}
-                           <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-20deg] group-hover:left-[100%] transition-all duration-[1000ms]" />
+                           <div className="absolute top-0 -left-full w-full h-full bg-linear-to-r from-transparent via-white/5 to-transparent skew-x-[-20deg] group-hover:left-full transition-all duration-1000" />
                         </motion.div>
                      ))}
                   </div>
@@ -598,8 +598,8 @@ const Home = () => {
 
                {/* CTA Section */}
                <Section containerClassName="relative z-10" className="overflow-visible">
-                  <div className="bg-primary-600 rounded-[50px] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
-                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+                     <div className="bg-linear-to-br from-primary-600 to-accent-600 rounded-[50px] p-12 md:p-20 text-center relative overflow-hidden shadow-premium">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-secondary-400/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
                      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-400/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
                      <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}

@@ -12,7 +12,14 @@ class SettingController extends ApiController
         $settings = SiteSetting::where('is_public', true)
             ->orderBy('display_order')
             ->get()
-            ->pluck('value', 'key');
+            ->mapWithKeys(function ($item) {
+                $value = $item->value;
+                if ($item->type === 'image' && !empty($value)) {
+                    // Generate full URL for images
+                    $value = asset('storage/' . $value);
+                }
+                return [$item->key => $value];
+            });
 
         return $this->success($settings);
     }

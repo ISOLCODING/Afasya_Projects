@@ -66,18 +66,18 @@ const About = () => {
                            description="Kami percaya bahwa setiap bisnis, sekecil apapun, berhak memiliki akses ke teknologi digital kelas dunia."
                         />
                         <div className="space-y-6">
-                           <div className="flex gap-4 p-6 rounded-3xl bg-primary-50 border border-primary-100">
+                              <div className="flex gap-4 p-6 glass-card bg-primary-50/50 dark:bg-secondary-800/30 border border-primary-100 dark:border-white/5">
                               <div className="text-2xl">🎯</div>
                               <div>
-                                 <h4 className="font-bold text-secondary-900 mb-1">Visi Kami</h4>
-                                 <p className="text-sm text-secondary-600 italic">Menjadi agensi digital nomor satu dalam pemberdayaan teknologi untuk UMKM di Indonesia.</p>
+                                    <h4 className="font-bold text-secondary-900 dark:text-white mb-1">Visi Kami</h4>
+                                    <p className="text-sm text-secondary-600 dark:text-neutral-300 italic">Menjadi agensi digital nomor satu dalam pemberdayaan teknologi untuk UMKM di Indonesia.</p>
                               </div>
                            </div>
-                           <div className="flex gap-4 p-6 rounded-3xl bg-secondary-50 border border-secondary-100">
+                              <div className="flex gap-4 p-6 glass-card bg-secondary-50/50 dark:bg-secondary-900/40 border border-secondary-100 dark:border-white/5">
                               <div className="text-2xl">🚀</div>
                               <div>
-                                 <h4 className="font-bold text-secondary-900 mb-1">Misi Kami</h4>
-                                 <p className="text-sm text-secondary-600">Memberikan solusi digital yang terjangkau, efektif, dan berkelanjutan bagi pertumbuhan bisnis.</p>
+                                    <h4 className="font-bold text-secondary-900 dark:text-white mb-1">Misi Kami</h4>
+                                    <p className="text-sm text-secondary-600 dark:text-neutral-300">Memberikan solusi digital yang terjangkau, efektif, dan berkelanjutan bagi pertumbuhan bisnis.</p>
                               </div>
                            </div>
                         </div>
@@ -88,9 +88,9 @@ const About = () => {
                            alt="Collaboration"
                            className="rounded-[40px] shadow-2xl"
                         />
-                        <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-[30px] shadow-2xl border border-secondary-100 max-w-xs">
-                           <p className="text-4xl font-black text-primary-600 mb-1">98%</p>
-                           <p className="text-xs font-bold text-secondary-500 uppercase tracking-widest leading-tight">Kepuasan Klien Terhadap Hasil Kerja Kami</p>
+                           <div className="absolute -bottom-8 -left-8 glass-card bg-white/90 dark:bg-secondary-900/90 p-8 rounded-[30px] shadow-2xl border border-secondary-100 dark:border-white/10 max-w-xs">
+                              <p className="text-4xl font-black text-primary-600 dark:text-primary-400 mb-1">98%</p>
+                              <p className="text-xs font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-widest leading-tight">Kepuasan Klien Terhadap Hasil Kerja Kami</p>
                         </div>
                      </div>
                   </div>

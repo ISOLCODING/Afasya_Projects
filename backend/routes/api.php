@@ -14,7 +14,10 @@ use App\Http\Controllers\Api\V1\SettingController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\BrandController;
-
+use App\Http\Controllers\Api\V1\ServicePackageController;
+use App\Http\Controllers\Api\V1\PaymentMethodController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\UserDashboardController;
 use App\Http\Controllers\Api\V1\AuthController;
 
 Route::prefix('v1')->group(function () {
@@ -28,11 +31,18 @@ Route::prefix('v1')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         
         Route::get('/dashboard', [DashboardController::class, 'index']);
+        Route::get('/user-packages', [UserDashboardController::class, 'userPackages']);
     });
 
-    // Services
+    // Services & Packages
     Route::get('/services', [ServiceController::class, 'index']);
     Route::get('/services/{service:slug}', [ServiceController::class, 'show']);
+    Route::get('/service-packages', [ServicePackageController::class, 'index']);
+    
+    // Payments & Orders
+    Route::get('/payment-methods', [PaymentMethodController::class, 'index']);
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::post('/orders/{uuid}/payment-proof', [OrderController::class, 'uploadProof']);
 
     // Portfolios
     Route::get('/portfolios', [PortfolioController::class, 'index']);

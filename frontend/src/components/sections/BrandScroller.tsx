@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Info, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Play, Pause, Info } from 'lucide-react';
 import type { Brand } from '../../lib/api/services/brand';
 import { getBrands } from '../../lib/api/services/brand';
 import { getStorageUrl, cn } from '../../lib/utils';
@@ -26,18 +26,37 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
    const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
+   const defaultBrands: Brand[] = [
+      { id: 1, name: 'BrandOne', logo_url: 'logo1.svg', is_active: true, sort_order: 1, created_at: '', updated_at: '' },
+      { id: 2, name: 'BrandTwo', logo_url: 'logo2.svg', is_active: true, sort_order: 2, created_at: '', updated_at: '' },
+      { id: 3, name: 'BrandThree', logo_url: 'logo3.svg', is_active: true, sort_order: 3, created_at: '', updated_at: '' },
+      { id: 4, name: 'BrandFour', logo_url: 'logo4.svg', is_active: true, sort_order: 4, created_at: '', updated_at: '' },
+      { id: 5, name: 'BrandFive', logo_url: 'logo5.svg', is_active: true, sort_order: 5, created_at: '', updated_at: '' },
+      { id: 6, name: 'BrandSix', logo_url: 'logo6.svg', is_active: true, sort_order: 6, created_at: '', updated_at: '' },
+   ];
+
    useEffect(() => {
       const fetchBrands = async () => {
-         const response = await getBrands();
-         if (response.success) {
-            setBrands(response.data);
+         try {
+            const response = await getBrands();
+            if (response.success && response.data.length > 0) {
+               setBrands(response.data);
+            } else {
+               // Use placeholders with better looking URLs if empty
+               setBrands(defaultBrands.map((b, i) => ({
+                  ...b,
+                  logo_url: `https://api.dicebear.com/7.x/initials/svg?seed=${b.name}&backgroundColor=0ea5e9&fontFamily=Arial&fontWeight=bold`
+               })));
+            }
+         } catch (error) {
+            console.error("Error fetching brands", error);
+         } finally {
+            setLoading(false);
          }
-         setLoading(false);
       };
       fetchBrands();
    }, []);
 
-   // Keyboard shortcut: Space to Toggle Play/Pause
    useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
          if (e.code === 'Space') {
@@ -52,9 +71,12 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
       return () => window.removeEventListener('keydown', handleKeyDown);
    }, []);
 
-   if (loading || brands.length === 0) return null;
+   if (loading) return (
+      <div className="py-20 flex justify-center">
+         <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+   );
 
-   // Duplicate brands enough times for infinite loop
    const repeatedBrands = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 
    const handleBrandClick = (brand: Brand) => {
@@ -69,7 +91,7 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
    ];
 
    return (
-      <section className={cn("py-28 bg-white dark:bg-black overflow-hidden relative group/section", className)}>
+      <section className={cn("py-28 bg-white dark:bg-secondary-900/10 backdrop-blur-sm overflow-hidden relative group/section border-y border-white/5", className)}>
          {/* Background Decorative Elements */}
          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/5 rounded-full blur-[120px] pointer-events-none" />
          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -93,7 +115,7 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
                      initial={{ opacity: 0, y: 30 }}
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true }}
-                     className="text-4xl md:text-6xl font-display font-black text-secondary-950 dark:text-white mb-8 leading-[1.1] tracking-tight"
+                     className="text-4xl md:text-6xl font-display font-black text-neutral-950 dark:text-white mb-8 leading-[1.1] tracking-tight"
                   >
                      {subtitle}
                   </motion.h2>
@@ -103,7 +125,7 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true }}
                      transition={{ delay: 0.1 }}
-                     className="text-secondary-600 dark:text-secondary-400 text-xl max-w-2xl leading-relaxed"
+                     className="text-neutral-600 dark:text-neutral-400 text-xl max-w-2xl leading-relaxed"
                   >
                      {description}
                   </motion.p>
@@ -114,15 +136,15 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="flex items-center gap-4 p-3 bg-secondary-50/50 dark:bg-secondary-900/40 backdrop-blur-2xl rounded-[32px] border border-secondary-200/50 dark:border-white/10 shadow-2xl self-start lg:self-center"
+                  className="flex items-center gap-4 p-3 bg-neutral-50/50 dark:bg-secondary-900/40 backdrop-blur-2xl rounded-[32px] border border-neutral-200/50 dark:border-white/10 shadow-premium self-start lg:self-center"
                >
                   <button
                      onClick={() => setIsPlaying(!isPlaying)}
                      className={cn(
                         "w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500",
                         isPlaying 
-                           ? "bg-primary-600 text-white shadow-[0_0_30px_rgba(16,185,129,0.4)] ring-4 ring-primary-500/10" 
-                           : "bg-secondary-200 dark:bg-secondary-800 text-secondary-600 dark:text-secondary-400"
+                           ? "bg-primary-600 text-white shadow-glow ring-4 ring-primary-500/10"
+                           : "bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
                      )}
                   >
                      {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" className="ml-1" />}
@@ -137,7 +159,7 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
                               "px-6 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-full transition-all duration-500",
                               speed === opt.value
                                  ? "bg-white dark:bg-white/10 text-primary-600 dark:text-primary-400 shadow-md"
-                                 : "text-secondary-400 hover:text-secondary-900 dark:hover:text-white"
+                                 : "text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
                            )}
                         >
                            {opt.label}
@@ -165,9 +187,9 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
                      onClick={() => handleBrandClick(brand)}
                      className="mx-12 flex flex-col items-center justify-center cursor-pointer group"
                   >
-                     <div className="relative w-40 h-24 md:w-56 md:h-32 flex items-center justify-center p-8 rounded-[32px] bg-secondary-50 dark:bg-white/5 border border-secondary-200/50 dark:border-white/5 transition-all duration-500 group-hover:bg-white dark:group-hover:bg-white/10 group-hover:border-primary-500/30 group-hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] overflow-hidden">
+                     <div className="relative w-40 h-24 md:w-56 md:h-32 flex items-center justify-center p-8 rounded-[32px] bg-neutral-50 dark:bg-white/5 border border-neutral-200/50 dark:border-white/5 transition-all duration-500 group-hover:bg-white dark:group-hover:bg-white/10 group-hover:border-primary-500/30 group-hover:shadow-[0_20px_50px_rgba(13,139,242,0.15)] overflow-hidden">
                         {/* Interactive Background Shine */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                        <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
                         <img
                            src={getStorageUrl(brand.logo_url)}
@@ -185,7 +207,7 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
                            </div>
                         </div>
                      </div>
-                     <span className="mt-5 text-[10px] font-black uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-600 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                     <span className="mt-5 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
                         {brand.name}
                      </span>
                   </motion.div>
@@ -193,11 +215,10 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
             </div>
 
             {/* Gradient Overlays - Deep Edge Shadows */}
-            <div className="absolute inset-y-0 left-0 w-40 md:w-80 bg-gradient-to-r from-white dark:from-black to-transparent z-10 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-40 md:w-80 bg-gradient-to-l from-white dark:from-black to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 left-0 w-40 md:w-80 bg-linear-to-r from-white dark:from-secondary-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-40 md:w-80 bg-linear-to-l from-white dark:from-secondary-950 to-transparent z-10 pointer-events-none" />
          </div>
 
-         {/* Modal Integration */}
          <BrandModal
             brand={selectedBrand}
             isOpen={isModalOpen}

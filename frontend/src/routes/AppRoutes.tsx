@@ -13,6 +13,8 @@ const Team = lazy(() => import('@/pages/team'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const DynamicPage = lazy(() => import('@/pages/DynamicPage'));
 const Login = lazy(() => import('@/pages/Auth/Login'));
+const Checkout = lazy(() => import('@/pages/Checkout'));
+const UserDashboard = lazy(() => import('@/pages/Dashboard'));
 const Dashboard = lazy(() => import('@/pages/Admin/Dashboard'));
 const NotFound = lazy(() => import('@/pages/404'));
 
@@ -59,6 +61,12 @@ const AppRoutes = () => {
 
             {/* Auth Routes */}
             <Route path="/auth/login" element={<Login />} />
+
+            {/* Protected User Routes */}
+            <Route element={<ProtectedRoute />}>
+               <Route path="/checkout/:packageId" element={<Checkout />} />
+               <Route path="/dashboard" element={<UserDashboard />} />
+            </Route>
 
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute />}>

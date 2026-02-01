@@ -19,7 +19,7 @@ const PortfolioCard = ({ title, category, image, slug, index }: PortfolioCardPro
          whileInView={{ opacity: 1, y: 0 }}
          viewport={{ once: true }}
          transition={{ duration: 0.6, delay: index * 0.1 }}
-         className="group relative rounded-[40px] overflow-hidden bg-secondary-900 aspect-[4/5] md:aspect-[3/4] shadow-2xl hover:shadow-primary-600/30 transition-all duration-500"
+         className="group relative rounded-[40px] overflow-hidden bg-linear-to-br from-primary-900 to-primary-950 aspect-4/5 md:aspect-3/4 shadow-2xl hover:shadow-primary-600/30 transition-all duration-500"
       >
          <Link to={`/portfolio/${slug}`} className="absolute inset-0 z-20" aria-label={`View ${title}`} />
 
@@ -31,7 +31,7 @@ const PortfolioCard = ({ title, category, image, slug, index }: PortfolioCardPro
          />
 
          {/* Overlay Gradient - More subtle and professional */}
-         <div className="absolute inset-0 bg-gradient-to-t from-secondary-950 via-secondary-900/40 to-transparent opacity-90" />
+         <div className="absolute inset-0 bg-linear-to-t from-neutral-950 via-neutral-900/40 to-transparent opacity-90" />
 
          {/* Top Info Tag */}
          <div className="absolute top-6 left-6 z-10">
@@ -42,9 +42,10 @@ const PortfolioCard = ({ title, category, image, slug, index }: PortfolioCardPro
 
          {/* Content */}
          <div className="absolute bottom-0 left-0 right-0 p-8 z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-            <h3 className="text-2xl md:text-3xl font-display font-extrabold text-white mb-4 line-clamp-2 leading-tight group-hover:text-primary-400 transition-colors">
-               {title}
-            </h3>
+            <h3
+               className="text-2xl md:text-3xl font-display font-extrabold text-white mb-4 line-clamp-2 leading-tight group-hover:text-primary-400 transition-colors"
+               dangerouslySetInnerHTML={{ __html: title }}
+            />
 
             <div className="flex items-center gap-2 text-primary-400 font-bold text-sm opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500 delay-100">
                Lihat Detail <ArrowRight className="w-5 h-5" />

@@ -52,7 +52,7 @@ const TeamPage = () => {
    return (
       <PageLayout>
          {/* Hero Section */}
-         <section className="pt-40 pb-20 bg-secondary-900 overflow-hidden relative">
+         <section className="pt-40 pb-20 bg-secondary-950 overflow-hidden relative">
             <div className="absolute top-0 left-0 w-96 h-96 bg-primary-600/10 rounded-full blur-[120px]" />
             <div className="container-custom relative z-10">
                <SectionHeader

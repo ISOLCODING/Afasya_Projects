@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Set;
 use Filament\Schemas\Schema;
+use App\Models\ServicePackage;
 use Illuminate\Support\Str;
 
 class ContentPageForm
@@ -109,6 +110,26 @@ class ContentPageForm
                                                         TextInput::make('title')->default('Partner Collaboration'),
                                                         TextInput::make('subtitle')->default('Dipercaya Oleh Brand Ternama'),
                                                         Textarea::make('description')->default('Kami bangga bekerja sama dengan perusahaan-perusahaan inovatif untuk menghadirkan solusi digital terbaik.'),
+                                                    ]),
+                                                Block::make('pricing_grid')
+                                                    ->label('Pricing Grid')
+                                                    ->icon('heroicon-o-currency-dollar')
+                                                    ->schema([
+                                                        TextInput::make('title')->default('Pilihan Paket Layanan'),
+                                                        TextInput::make('subtitle')->default('Investasi Digital Terbaik untuk Bisnis Anda'),
+                                                        Textarea::make('description'),
+                                                        Select::make('package_ids')
+                                                            ->label('Select Packages')
+                                                            ->multiple()
+                                                            ->options(ServicePackage::all()->pluck('package_name', 'id'))
+                                                            ->preload()
+                                                            ->searchable(),
+                                                        Select::make('columns')
+                                                            ->options([
+                                                                '2' => '2 Columns',
+                                                                '3' => '3 Columns',
+                                                                '4' => '4 Columns',
+                                                            ])->default('3'),
                                                     ]),
                                                 Block::make('contact_form')
                                                     ->label('Contact Form')

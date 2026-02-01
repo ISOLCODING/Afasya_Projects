@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import Section from '@/components/layout/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -11,9 +11,12 @@ import BlogCard from '@/components/ui/BlogCard';
 import { ContactForm } from '@/components/ui/ContactForm';
 import InteractiveTimeline from '@/components/ui/InteractiveTimeline';
 import FlipCard from '@/components/ui/FlipCard';
+import PricingCard from '@/components/ui/PricingCard';
 import BrandScroller from '@/components/sections/BrandScroller';
 import { getServices, getPortfolios, getTeam, getPosts } from '@/lib/api';
+import { getServicePackages } from '@/lib/api/services/service_package';
 import { cn, getStorageUrl } from '@/lib/utils';
+import React from 'react';
 
 
 const BrandsMarqueeBlock = ({ data }: { data: any }) => (
@@ -25,45 +28,84 @@ const BrandsMarqueeBlock = ({ data }: { data: any }) => (
 );
 
 const RichTextBlock = ({ data }: { data: any }) => (
-   <Section background="white">
+   <Section background={data.background || "white"}>
       <div
-         className="prose prose-lg max-w-4xl mx-auto prose-primary prose-headings:font-display prose-headings:font-bold prose-p:text-secondary-600"
+         className={cn(
+            "prose prose-lg max-w-4xl mx-auto prose-primary dark:prose-invert",
+            "prose-headings:font-display prose-headings:font-bold",
+            "prose-p:text-secondary-600 dark:prose-p:text-secondary-300",
+            "prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-a:no-underline hover:prose-a:underline",
+            "prose-strong:text-secondary-900 dark:prose-strong:text-white"
+         )}
          dangerouslySetInnerHTML={{ __html: data.content }}
       />
    </Section>
 );
 
 const HeroBlock = ({ data }: { data: any }) => (
-   <section className="relative pt-32 pb-20 overflow-hidden bg-secondary-900 border-b border-primary-900/20">
-      <div className="absolute inset-0 bg-primary-950/20 -z-10" />
+   <section className="relative pt-32 pb-20 overflow-hidden bg-secondary-950 border-b border-white/5">
+      {/* Background decoration */}
+      <div className="absolute inset-0 z-0">
+         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-glow" />
+         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-[100px] mix-blend-screen" />
+         <div className="absolute inset-0 bg-grid-tech opacity-10 pointer-events-none" />
+      </div>
+
       <div className="container-custom relative z-10">
-         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+               initial={{ opacity: 0, x: -30 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+            >
                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  className="text-4xl md:text-6xl font-display font-extrabold text-white mb-6 leading-tight"
-               >
-                  {data.title}
-               </motion.h1>
+                  className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-white mb-8 leading-[1.1] tracking-tight drop-shadow-lg"
+                  dangerouslySetInnerHTML={{ __html: data.title }}
+               />
+
                {data.subtitle && (
-                  <p className="text-xl text-secondary-300 mb-8 max-w-lg">
-                     {data.subtitle}
-                  </p>
+                  <motion.div
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: 0.1 }}
+                     className="text-xl md:text-2xl text-secondary-300 mb-10 max-w-xl leading-relaxed font-medium"
+                     dangerouslySetInnerHTML={{ __html: data.subtitle }}
+                  />
                )}
+
                {data.cta_text && data.cta_link && (
-                  <Link to={data.cta_link} className="btn btn-primary px-10 h-14 text-lg">
-                     {data.cta_text} <ArrowRight className="ml-2 w-5 h-5" />
-                  </Link>
+                  <motion.div
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: 0.2 }}
+                  >
+                     <Link to={data.cta_link} className="btn btn-primary px-10 h-16 text-lg shadow-glow hover:shadow-glow-lg transition-all rounded-2xl group">
+                        {data.cta_text}
+                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                     </Link>
+                  </motion.div>
                )}
-            </div>
+            </motion.div>
+
             {data.image && (
                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  className="rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/10"
+                  initial={{ opacity: 0, scale: 0.9, x: 30 }}
+                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="relative group"
                >
-                  <img src={getStorageUrl(data.image)} alt={data.title} className="w-full h-auto" />
+                  <div className="absolute -inset-4 bg-primary-500/20 rounded-[48px] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="relative rounded-[40px] overflow-hidden shadow-2xl border border-white/10 glass-card bg-secondary-900/50 p-2">
+                     <div className="rounded-[32px] overflow-hidden">
+                        <img
+                           src={getStorageUrl(data.image)}
+                           alt={data.title?.replace(/<[^>]*>/g, '') || "Hero image"}
+                           className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
+                        />
+                     </div>
+                  </div>
                </motion.div>
             )}
          </div>
@@ -72,18 +114,41 @@ const HeroBlock = ({ data }: { data: any }) => (
 );
 
 const ImageTextBlock = ({ data }: { data: any }) => (
-   <Section>
+   <Section background={data.background || "white"}>
       <div className={cn(
          "grid grid-cols-1 lg:grid-cols-2 gap-16 items-center",
          data.image_position === 'right' ? 'lg:flex-row-reverse' : ''
       )}>
-         <div className={data.image_position === 'right' ? 'lg:order-2' : ''}>
-            <img src={getStorageUrl(data.image)} alt="Content image" className="rounded-[40px] shadow-2xl" />
-         </div>
-         <div className={cn(
-            "prose prose-lg prose-primary",
-            data.image_position === 'right' ? 'lg:order-1' : ''
-         )} dangerouslySetInnerHTML={{ __html: data.content }} />
+         <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className={cn(
+               "relative group",
+               data.image_position === 'right' ? 'lg:order-2' : ''
+            )}
+         >
+            <div className="absolute -inset-4 bg-primary-500/10 rounded-[48px] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <img
+               src={getStorageUrl(data.image)}
+               alt="Content image"
+               className="relative rounded-[40px] shadow-2xl border border-white/10 w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
+            />
+         </motion.div>
+
+         <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className={cn(
+               "prose prose-lg max-w-none transition-colors duration-300",
+               "prose-headings:font-display prose-headings:font-bold prose-headings:tracking-tight",
+               "prose-p:text-secondary-600 dark:prose-p:text-secondary-300",
+               "prose-primary dark:prose-invert",
+               data.image_position === 'right' ? 'lg:order-1' : ''
+            )}
+            dangerouslySetInnerHTML={{ __html: data.content }}
+         />
       </div>
    </Section>
 );
@@ -123,12 +188,15 @@ const PortfolioGridBlock = ({ data }: { data: any }) => {
    });
 
    return (
-      <Section background="dark">
+      <Section background="dark" className="relative">
+         <div className="absolute top-0 right-0 w-96 h-96 bg-primary-600/10 rounded-full blur-[120px] -z-10" />
          <SectionHeader
             light
             title={data.title}
+            description={data.description}
+            className="mb-20"
          />
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {portfolios?.map((item: any, idx: number) => (
                <PortfolioCard
                   key={item.slug}
@@ -241,24 +309,76 @@ const ContactFormBlock = ({ data }: { data: any }) => (
 
 const CTABlock = ({ data }: { data: any }) => {
    const themes = {
-      primary: 'bg-primary-600 text-white',
-      dark: 'bg-secondary-900 text-white',
-      light: 'bg-secondary-50 text-secondary-900',
+      primary: 'bg-primary-600 text-white shadow-[0_0_50px_-12px_rgba(14,165,233,0.5)]',
+      dark: 'bg-secondary-900 dark:bg-black/40 text-white border border-white/10',
+      light: 'bg-secondary-50 dark:bg-secondary-900/50 text-secondary-900 dark:text-white border border-transparent dark:border-white/10',
    };
 
    return (
       <Section>
          <div className={cn(
-            "rounded-[50px] p-12 md:p-20 text-center relative overflow-hidden",
+            "rounded-[50px] p-12 md:p-20 text-center relative overflow-hidden backdrop-blur-sm",
             themes[data.theme as keyof typeof themes] || themes.primary
          )}>
-            <h2 className="text-3xl md:text-5xl font-display font-extrabold mb-8">{data.title}</h2>
+            <div className="absolute inset-0 bg-grid-white/[0.05] pointer-events-none" />
+            <h2 className="text-3xl md:text-5xl font-display font-extrabold mb-8 relative z-10">{data.title}</h2>
             <Link to={data.button_link} className={cn(
-               "btn px-10 h-14 text-lg font-bold",
+               "btn px-10 h-14 text-lg font-bold relative z-10 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1",
                data.theme === 'light' ? 'btn-primary' : 'bg-white text-primary-700 hover:bg-secondary-50'
             )}>
                {data.button_text}
             </Link>
+         </div>
+      </Section>
+   );
+};
+
+const PricingBlock = ({ data }: { data: any }) => {
+   const [packages, setPackages] = React.useState<any[]>([]);
+   const [loading, setLoading] = React.useState(true);
+   const navigate = useNavigate();
+
+   React.useEffect(() => {
+      const fetchPackages = async () => {
+         const res = await getServicePackages(data.package_ids);
+         if (res.success) {
+            setPackages(res.data);
+         }
+         setLoading(false);
+      };
+      if (data.package_ids && data.package_ids.length > 0) {
+         fetchPackages();
+      } else {
+         setLoading(false);
+      }
+   }, [data.package_ids]);
+
+   const handleSelect = (id: number) => {
+      navigate(`/checkout/${id}`);
+   };
+
+   if (loading) return (
+      <div className="py-20 flex justify-center">
+         <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+   );
+
+   return (
+      <Section id="pricing">
+         <SectionHeader
+            subtitle={data.subtitle}
+            title={data.title}
+            description={data.description}
+         />
+         <div className={cn(
+            "grid gap-8 mt-16",
+            data.columns === '4' ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4" :
+               data.columns === '2' ? "grid-cols-1 md:grid-cols-2" :
+                  "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+         )}>
+            {packages.map((pkg, idx) => (
+               <PricingCard key={pkg.id} packageData={pkg} index={idx} onSelect={handleSelect} />
+            ))}
          </div>
       </Section>
    );
@@ -295,6 +415,8 @@ const ContentBlocks = ({ blocks }: { blocks: any[] }) => {
                   return <CTABlock key={index} data={block.data} />;
                case 'brands_marquee':
                   return <BrandsMarqueeBlock key={index} data={block.data} />;
+               case 'pricing_grid':
+                  return <PricingBlock key={index} data={block.data} />;
                default:
                   return null;
             }

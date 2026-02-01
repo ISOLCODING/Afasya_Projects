@@ -54,26 +54,28 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index }: Ser
             rotateX,
             transformStyle: "preserve-3d",
          }}
-         className="group relative bg-secondary-900 overflow-hidden rounded-[32px] border border-white/5 hover:border-primary-500/30 transition-colors duration-500 cursor-pointer"
+         className="group relative bg-linear-to-br from-white to-primary-50 dark:from-primary-900 dark:to-primary-950 overflow-hidden rounded-[32px] border border-primary-100 dark:border-white/5 hover:border-primary-500/30 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-primary-500/20"
       >
          {/* Gradient Background */}
-         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+         < div className="absolute inset-0 bg-linear-to-br from-primary-600/10 via-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
          <div
             style={{ transform: "translateZ(50px)" }}
             className="relative z-10 p-8 flex flex-col h-full"
          >
-            <div className="w-16 h-16 bg-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center text-primary-400 mb-8 border border-white/10 group-hover:bg-primary-600 group-hover:text-white group-hover:scale-110 transition-all duration-500 shadow-xl">
+            <div className="w-16 h-16 bg-linear-to-br from-primary-500/10 to-secondary-500/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-primary-400 mb-8 border border-white/10 group-hover:bg-linear-to-br group-hover:from-primary-600 group-hover:to-secondary-600 group-hover:text-white group-hover:scale-110 transition-all duration-500 shadow-xl">
                <Icon className="w-8 h-8" />
             </div>
 
-            <h3 className="text-2xl font-display font-bold text-white mb-4 group-hover:text-primary-400 transition-colors">
-               {title}
-            </h3>
+            <h3
+               className="text-2xl font-display font-bold text-secondary-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+               dangerouslySetInnerHTML={{ __html: title }}
+            />
 
-            <p className="text-secondary-400 text-sm leading-relaxed mb-10 flex-grow">
-               {description}
-            </p>
+            <p
+               className="text-secondary-600 dark:text-neutral-400 text-sm leading-relaxed mb-10 grow"
+               dangerouslySetInnerHTML={{ __html: description }}
+            />
 
             <Link
                to={`/services/${slug}`}
@@ -86,6 +88,7 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index }: Ser
 
          {/* Decorative elements */}
          <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary-600/10 rounded-full blur-3xl group-hover:bg-primary-600/20 transition-all duration-700" />
+         <div className="absolute -left-10 -top-10 w-32 h-32 bg-secondary-500/10 rounded-full blur-3xl group-hover:bg-secondary-500/20 transition-all duration-700" />
 
          {image && (
             <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity duration-700">

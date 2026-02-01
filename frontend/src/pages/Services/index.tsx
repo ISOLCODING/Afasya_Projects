@@ -26,7 +26,7 @@ const ServicesPage = () => {
          ) : (
             <>
                {/* Header */}
-               <section className="pt-40 pb-20 bg-secondary-900 overflow-hidden relative">
+                  <section className="pt-40 pb-20 bg-secondary-950 overflow-hidden relative">
                   <div className="absolute top-0 right-0 w-96 h-96 bg-primary-600/20 rounded-full blur-[120px]" />
                   <div className="container-custom relative z-10">
                      <SectionHeader
@@ -45,7 +45,7 @@ const ServicesPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                      {isLoading ? (
                         Array(6).fill(0).map((_, i) => (
-                           <div key={i} className="h-80 bg-white rounded-[32px] animate-pulse shadow-sm" />
+                           <div key={i} className="h-80 bg-white dark:bg-neutral-900 rounded-[32px] animate-pulse shadow-sm" />
                         ))
                      ) : (
                         (services || []).map((service: any, idx: number) => (
@@ -82,12 +82,12 @@ const ServicesPage = () => {
                               { title: 'Keamanan Berlapis', desc: 'Proteksi SSL dan proteksi malware standar industri.', icon: Shield },
                            ].map((item, i) => (
                               <li key={i} className="flex gap-4">
-                                 <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 shrink-0">
+                                 <div className="w-10 h-10 rounded-full bg-primary-500/10 flex items-center justify-center text-primary-400 shrink-0 border border-primary-500/20 shadow-glow">
                                     <item.icon className="w-5 h-5" />
                                  </div>
                                  <div>
-                                    <h4 className="font-bold text-secondary-900">{item.title}</h4>
-                                    <p className="text-sm text-secondary-500">{item.desc}</p>
+                                    <h4 className="font-bold text-secondary-900 dark:text-white mb-1">{item.title}</h4>
+                                    <p className="text-sm text-secondary-500 dark:text-secondary-400">{item.desc}</p>
                                  </div>
                               </li>
                            ))}
@@ -95,12 +95,12 @@ const ServicesPage = () => {
                      </div>
                      <div className="relative">
                         <div className="rounded-[40px] overflow-hidden shadow-2xl">
-                           <img src="/images/service-web.jpg" alt="Service process" className="w-full h-auto" />
+                              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070" alt="Service process" className="w-full h-auto" />
                         </div>
                         {/* Decorative floating stats */}
-                        <div className="absolute -top-10 -right-10 glass-card p-6 rounded-3xl hidden md:block">
-                           <p className="text-sm font-bold text-secondary-400 uppercase tracking-widest mb-1">Success Rate</p>
-                           <p className="text-4xl font-extrabold text-primary-600">99%</p>
+                           <div className="absolute -top-10 -right-10 glass-card bg-secondary-900/90 text-white p-6 rounded-3xl hidden md:block border border-white/10 shadow-premium">
+                              <p className="text-sm font-bold text-secondary-400 uppercase tracking-widest mb-1">Success Rate</p>
+                              <p className="text-4xl font-extrabold text-primary-400">99%</p>
                         </div>
                      </div>
                   </div>

@@ -284,7 +284,7 @@ return new class extends Migration
             $table->longText('value')->nullable();
             $table->string('type')->default('string'); // enum
             $table->string('data_type', 50)->nullable();
-            $table->string('group_name', 100);
+            $table->string('group_name', 100);    
             $table->string('subgroup', 100)->nullable();
             $table->string('label')->nullable();
             $table->text('description')->nullable();

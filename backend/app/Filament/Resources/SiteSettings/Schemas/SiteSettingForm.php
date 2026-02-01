@@ -42,6 +42,7 @@ class SiteSettingForm
                                 'json' => 'JSON/Key-Value',
                                 'url' => 'URL',
                                 'email' => 'Email',
+                                'image' => 'Image/File',
                             ])
                             ->required()
                             ->default('string')
@@ -58,6 +59,13 @@ class SiteSettingForm
                         Toggle::make('value')
                             ->label('Value (as Boolean)')
                             ->visible(fn (callable $get) => $get('type') === 'boolean'),
+                        
+                         \Filament\Forms\Components\FileUpload::make('value')
+                            ->label('Value (Image)')
+                            ->image()
+                            ->directory('site_settings')
+                            ->visibility('public')
+                            ->visible(fn (callable $get) => $get('type') === 'image'),
                         
                         KeyValue::make('options')
                             ->label('Options (for Select Type or JSON)'),

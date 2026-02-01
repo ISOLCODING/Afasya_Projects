@@ -32,7 +32,7 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
          transition={{ duration: 0.5, delay: index * 0.1 }}
          className="group relative"
       >
-         <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden mb-6 shadow-lg group-hover:shadow-2xl transition-all duration-500 bg-secondary-50">
+         <div className="relative aspect-4/5 rounded-[32px] overflow-hidden mb-6 shadow-lg group-hover:shadow-2xl transition-all duration-500 bg-neutral-50 dark:bg-secondary-900">
             {displayImage ? (
                <img
                   src={getStorageUrl(displayImage)}
@@ -40,18 +40,18 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                />
             ) : (
-               <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-primary-200 uppercase">
+                  <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-neutral-200 dark:text-secondary-700 uppercase">
                   {initials || (name ? name.substring(0, 2) : '??')}
                </div>
             )}
 
             {/* Overlay with Bio & Socials */}
-            <div className="absolute inset-0 bg-primary-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-center">
+            <div className="absolute inset-0 bg-primary-950/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-center">
                {bio && (
                   <motion.p
                      initial={{ y: 10, opacity: 0 }}
                      whileInView={{ y: 0, opacity: 1 }}
-                     className="text-white text-sm mb-6 leading-relaxed line-clamp-4"
+                     className="text-white text-sm mb-6 leading-relaxed line-clamp-4 font-medium"
                   >
                      {bio}
                   </motion.p>
@@ -60,7 +60,7 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
                {expertises && expertises.length > 0 && (
                   <div className="flex flex-wrap justify-center gap-1 mb-6">
                      {expertises.slice(0, 3).map((exp, i) => (
-                        <span key={i} className="px-2 py-0.5 bg-white/20 rounded text-[10px] text-white">
+                        <span key={i} className="px-2 py-0.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] text-white border border-white/10">
                            {exp}
                         </span>
                      ))}
@@ -81,7 +81,7 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         transition={{ delay: i * 0.1 }}
-                        className="w-10 h-10 rounded-full bg-white text-primary-600 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all transform hover:scale-110"
+                        className="w-10 h-10 rounded-full bg-white text-primary-600 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all transform hover:scale-110 shadow-lg"
                      >
                         <item.icon className="w-5 h-5" />
                      </motion.a>
@@ -91,8 +91,8 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
          </div>
 
          <div className="text-center">
-            <h3 className="text-xl font-bold text-secondary-900 mb-1">{name}</h3>
-            <p className="text-sm font-medium text-primary-600 uppercase tracking-wider">{position}</p>
+            <h3 className="text-xl font-display font-bold text-neutral-900 dark:text-white mb-1">{name}</h3>
+            <p className="text-sm font-black text-primary-600 dark:text-primary-400 uppercase tracking-widest">{position}</p>
          </div>
       </motion.div>
    );

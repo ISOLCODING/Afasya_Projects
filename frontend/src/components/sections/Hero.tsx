@@ -10,28 +10,7 @@ interface HeroProps {
    image?: string;
 }
 
-const TypewriterText = ({ text }: { text: string }) => {
-   const words = text.split(' ');
-   return (
-      <>
-         {words.map((word, i) => (
-            <motion.span
-               key={i}
-               initial={{ opacity: 0, y: 10 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{
-                  duration: 0.3,
-                  delay: i * 0.1,
-                  ease: "easeOut"
-               }}
-               className="inline-block mr-[0.3em]"
-            >
-               {word}
-            </motion.span>
-         ))}
-      </>
-   );
-};
+
 
 const Hero = ({ title, description, image }: HeroProps) => {
    const containerRef = useRef<HTMLDivElement>(null);
@@ -57,11 +36,11 @@ const Hero = ({ title, description, image }: HeroProps) => {
             className="absolute inset-0 -z-10"
             quantity={100}
             staticity={30}
-            color="#6366f1"
+            color="#0ea5e9"
          />
 
          {/* Gradient Overlays */}
-         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-secondary-950 via-transparent to-secondary-950 pointer-events-none -z-10" />
+         <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-neutral-950 via-transparent to-neutral-950 pointer-events-none -z-10" />
 
          <motion.div
             style={{ y: y1, opacity }}
@@ -69,7 +48,7 @@ const Hero = ({ title, description, image }: HeroProps) => {
          />
          <motion.div
             style={{ y: y2, opacity }}
-            className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent-600/10 rounded-full blur-[120px] -z-10"
+            className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-secondary-600/10 rounded-full blur-[120px] -z-10"
          />
 
          <div className="container-custom relative z-10">
@@ -90,18 +69,18 @@ const Hero = ({ title, description, image }: HeroProps) => {
                   </motion.div>
 
                   <motion.h1
-                     className="text-5xl md:text-7xl font-display font-extrabold text-white leading-[1.1] mb-8"
+                     className="text-5xl md:text-7xl font-display font-black text-white leading-[1.1] mb-8"
                   >
-                     <TypewriterText text={displayTitle} />
+                     <div dangerouslySetInnerHTML={{ __html: displayTitle }} />
                   </motion.h1>
 
                   <motion.p
                      initial={{ opacity: 0, y: 20 }}
                      animate={{ opacity: 1, y: 0 }}
                      transition={{ duration: 0.7, delay: 0.8 }}
-                     className="text-lg md:text-xl text-secondary-300 mb-10 leading-relaxed max-w-xl"
+                     className="text-lg md:text-xl text-secondary-300 mb-10 leading-relaxed max-w-xl font-medium"
                   >
-                     {description || "Afasya Projects membantu UMKM Indonesia bertransformasi digital dengan website profesional, cepat, dan terjangkau. Kredibilitas bisnis Anda adalah prioritas kami."}
+                     <span dangerouslySetInnerHTML={{ __html: description || "Afasya Projects membantu UMKM Indonesia bertransformasi digital dengan website profesional, cepat, dan terjangkau. Kredibilitas bisnis Anda adalah prioritas kami." }} />
                   </motion.p>
 
                   <motion.div
@@ -115,7 +94,7 @@ const Hero = ({ title, description, image }: HeroProps) => {
                            Mulai Proyek
                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary-400 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-linear-to-r from-primary-400 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                      </Link>
 
                      <button className="btn backdrop-blur-md bg-white/5 border border-white/10 text-white hover:bg-white/10 h-14 px-8 text-lg rounded-2xl group flex items-center gap-3 transition-all">
@@ -138,7 +117,7 @@ const Hero = ({ title, description, image }: HeroProps) => {
                         { text: "Optimasi SEO", color: "text-accent-400" },
                         { text: "Support 24/7", color: "text-green-400" }
                      ].map((feat, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-secondary-400 font-medium">
+                        <div key={i} className="flex items-center gap-2 text-sm text-neutral-400 font-medium">
                            <CheckCircle className={`w-5 h-5 ${feat.color}`} />
                            {feat.text}
                         </div>
@@ -167,7 +146,7 @@ const Hero = ({ title, description, image }: HeroProps) => {
                   <motion.div
                      animate={{ y: [0, -15, 0] }}
                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                     className="absolute -bottom-10 -left-10 glass-card p-6 rounded-3xl z-20 max-w-[220px] border border-white/20 shadow-2xl"
+                     className="absolute -bottom-10 -left-10 glass-card bg-secondary-900/80 backdrop-blur-xl p-6 rounded-3xl z-20 max-w-[220px] border border-primary-500/30 shadow-[0_20px_50px_-12px_rgba(14,165,233,0.3)]"
                   >
                      <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-primary-500/20 flex items-center justify-center text-primary-400">
@@ -175,13 +154,13 @@ const Hero = ({ title, description, image }: HeroProps) => {
                         </div>
                         <div>
                            <p className="text-2xl font-bold text-white tracking-tight">150+</p>
-                           <p className="text-[10px] uppercase font-extrabold text-secondary-400 tracking-widest">Proyek Selesai</p>
+                           <p className="text-[10px] uppercase font-extrabold text-neutral-400 tracking-widest">Proyek Selesai</p>
                         </div>
                      </div>
                   </motion.div>
 
                   {/* Decorative background elements */}
-                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent-500/20 rounded-full blur-3xl animate-pulse" />
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-secondary-500/20 rounded-full blur-3xl animate-pulse" />
                   <div className="absolute top-1/2 -left-20 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl" />
                </motion.div>
             </div>
@@ -194,8 +173,8 @@ const Hero = ({ title, description, image }: HeroProps) => {
             transition={{ delay: 2 }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
          >
-            <span className="text-[10px] uppercase font-bold text-secondary-500 tracking-[0.2em]">Scroll</span>
-            <div className="w-[1px] h-12 bg-gradient-to-b from-primary-500 to-transparent" />
+            <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-[0.2em]">Scroll</span>
+            <div className="w-px h-12 bg-linear-to-b from-primary-500 to-transparent" />
          </motion.div>
       </section>
    );

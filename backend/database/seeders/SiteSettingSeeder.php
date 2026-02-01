@@ -49,6 +49,27 @@ class SiteSettingSeeder extends Seeder
                 'is_public' => true,
             ],
             [
+                'key' => 'site_favicon',
+                'value' => 'site_settings/favicon.png',
+                'type' => 'image',
+                'group_name' => 'general',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'site_logo',
+                'value' => 'site_settings/logo.png',
+                'type' => 'image',
+                'group_name' => 'general',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'site_logo_with_text',
+                'value' => 'site_settings/logo.png',
+                'type' => 'image',
+                'group_name' => 'general',
+                'is_public' => true,
+            ],
+            [
                 'key' => 'maintenance_mode',
                 'value' => false,
                 'type' => 'boolean',

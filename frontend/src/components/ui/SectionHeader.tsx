@@ -33,7 +33,7 @@ const SectionHeader = ({
                viewport={{ once: true }}
                className={cn(
                   'inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-4',
-                  light ? 'bg-white/10 text-primary-300' : 'bg-primary-50 text-primary-600'
+                  light ? 'bg-white/10 text-primary-300' : 'bg-primary-50 text-primary-600 dark:bg-primary-900/10 dark:text-primary-400'
                )}
             >
                {subtitle}
@@ -47,11 +47,10 @@ const SectionHeader = ({
             transition={{ delay: 0.1 }}
             className={cn(
                'text-3xl md:text-4xl lg:text-5xl font-display font-extrabold mb-6 leading-tight',
-               light ? 'text-white' : 'text-secondary-900'
+               light ? 'text-white' : 'text-secondary-900 dark:text-white'
             )}
-         >
-            {title}
-         </motion.h2>
+            dangerouslySetInnerHTML={{ __html: title }}
+         />
 
          {description && (
             <motion.p
@@ -61,11 +60,10 @@ const SectionHeader = ({
                transition={{ delay: 0.2 }}
                className={cn(
                   'text-lg leading-relaxed',
-                  light ? 'text-secondary-300' : 'text-secondary-600'
+                  light ? 'text-secondary-300' : 'text-secondary-600 dark:text-neutral-300'
                )}
-            >
-               {description}
-            </motion.p>
+               dangerouslySetInnerHTML={{ __html: description }}
+            />
          )}
       </div>
    );
