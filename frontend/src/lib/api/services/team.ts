@@ -1,0 +1,18 @@
+// src/lib/api/services/team.ts
+import apiClient from '../client';
+
+export const getTeam = async () => {
+  console.log('👥 Fetching team...');
+  try {
+    const response = await apiClient.get('/team');
+    const data = response.data;
+    return {
+      success: data.status === 'success',
+      data: data.data || [],
+      message: data.message
+    };
+  } catch (error: any) {
+    console.error('❌ Error fetching team:', error);
+    return { success: false, data: [], message: error.message || 'Failed to fetch team' };
+  }
+};
