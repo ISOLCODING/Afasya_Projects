@@ -4,6 +4,7 @@ import { Suspense, lazy } from 'react';
 // Lazy load pages
 const Home = lazy(() => import('@/pages/Home'));
 const Services = lazy(() => import('@/pages/Services'));
+const ServiceDetail = lazy(() => import('@/pages/Services/ServiceDetail'));
 const Portfolio = lazy(() => import('@/pages/Portfolio'));
 const PortfolioDetail = lazy(() => import('@/pages/Portfolio/PortfolioDetail'));
 const About = lazy(() => import('@/pages/About'));
@@ -39,6 +40,7 @@ const AppRoutes = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/services/:slug" element={<ServiceDetail />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
             <Route path="/blog" element={<Blog />} />

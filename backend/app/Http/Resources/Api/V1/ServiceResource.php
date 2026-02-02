@@ -17,6 +17,7 @@ class ServiceResource extends JsonResource
             'full_description' => $this->full_description,
             'price_min' => $this->price_min,
             'price_max' => $this->price_max,
+            'starting_price' => $this->starting_price,
             'currency' => $this->currency,
             'delivery_time' => $this->delivery_time,
             'is_featured' => $this->is_featured,

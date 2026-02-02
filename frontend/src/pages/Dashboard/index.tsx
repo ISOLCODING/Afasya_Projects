@@ -96,7 +96,7 @@ const UserDashboard = () => {
                                     <Package size={32} className="text-primary-500" />
                                 </div>
                                 
-                                <div className="flex-grow">
+                                <div className="grow">
                                     <div className="flex flex-wrap items-center gap-3 mb-2">
                                         <h3 className="text-2xl font-bold text-white">{item.service_package?.package_name}</h3>
                                         <span className={cn(
@@ -127,7 +127,7 @@ const UserDashboard = () => {
                                 </div>
 
                                 <div className="w-full lg:w-auto flex gap-3">
-                                    <button className="btn btn-primary flex-grow lg:flex-none px-8 h-14 rounded-2xl font-bold group">
+                                    <button className="btn btn-primary grow lg:flex-none px-8 h-14 rounded-2xl font-bold group">
                                         Akses Service
                                         <ArrowUpRight size={18} className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                     </button>

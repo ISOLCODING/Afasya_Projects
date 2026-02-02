@@ -90,6 +90,22 @@ class Service extends Model implements HasMedia
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public function getStartingPriceAttribute(): ?float
+    {
+        $minPackagePrice = $this->packages()->min('price');
+        return $minPackagePrice ?: $this->price_min;
+    }
+
+    protected static function booted()
+    {
+        static::saving(function ($service) {
+            if ($service->packages()->exists()) {
+                $service->price_min = $service->packages()->min('price');
+                $service->price_max = $service->packages()->max('price');
+            }
+        });
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('service_images')

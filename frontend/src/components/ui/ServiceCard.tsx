@@ -10,9 +10,10 @@ interface ServiceCardProps {
    slug: string;
    image?: string;
    index: number;
+   startingPrice?: number | string;
 }
 
-const ServiceCard = ({ title, description, icon: Icon, slug, image, index }: ServiceCardProps) => {
+const ServiceCard = ({ title, description, icon: Icon, slug, image, index, startingPrice }: ServiceCardProps) => {
    const x = useMotionValue(0);
    const y = useMotionValue(0);
 
@@ -73,9 +74,17 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index }: Ser
             />
 
             <p
-               className="text-secondary-600 dark:text-neutral-400 text-sm leading-relaxed mb-10 grow"
+               className="text-secondary-600 dark:text-neutral-400 text-sm leading-relaxed mb-6 grow"
                dangerouslySetInnerHTML={{ __html: description }}
             />
+
+            <div className="flex items-center gap-2 mb-8 p-3 rounded-2xl bg-white/5 border border-white/5 w-fit">
+               <Zap className="w-4 h-4 text-primary-500" />
+               <span className="text-xs text-secondary-500 uppercase tracking-widest font-bold">Mulai dari</span>
+               <span className="text-lg font-black text-secondary-900 dark:text-white">
+                  {startingPrice ? `Rp ${new Intl.NumberFormat('id-ID').format(Number(startingPrice))}` : 'Harga Kompetitif'}
+               </span>
+            </div>
 
             <Link
                to={`/services/${slug}`}

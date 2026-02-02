@@ -3,26 +3,22 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServicePackage;
-use Illuminate\Http\Request;
+use App\Http\Resources\Api\V1\ServicePackageResource;
+use Illuminate\Http\JsonResponse;
 
-class ServicePackageController extends Controller
+class ServicePackageController extends ApiController
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $query = ServicePackage::query();
 
         if ($request->has('ids')) {
-            $ids = explode(',', $request->ids);
+            $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
             $query->whereIn('id', $ids);
         }
 
         $packages = $query->orderBy('display_order')->get();
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $packages,
-            'message' => 'Service packages retrieved successfully',
-        ]);
+        return $this->success(ServicePackageResource::collection($packages));
     }
 }
