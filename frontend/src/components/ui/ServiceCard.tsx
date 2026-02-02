@@ -79,7 +79,7 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index, start
             />
 
             <div className="flex items-center gap-2 mb-8 p-3 rounded-2xl bg-white/5 border border-white/5 w-fit">
-               <Zap className="w-4 h-4 text-primary-500" />
+               <span className="w-4 h-4 text-primary-500" />
                <span className="text-xs text-secondary-500 uppercase tracking-widest font-bold">Mulai dari</span>
                <span className="text-lg font-black text-secondary-900 dark:text-white">
                   {startingPrice ? `Rp ${new Intl.NumberFormat('id-ID').format(Number(startingPrice))}` : 'Harga Kompetitif'}

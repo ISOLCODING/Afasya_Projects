@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ServicePackages\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -13,26 +14,32 @@ class ServicePackageForm
     {
         return $schema
             ->components([
-                TextInput::make('service_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('service_id')
+                    ->relationship('service', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 TextInput::make('package_name')
                     ->required(),
                 TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('IDR'),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                TextInput::make('included_features'),
-                TextInput::make('excluded_features'),
+                TextInput::make('included_features')
+                    ->helperText('Contoh: Fitur A, Fitur B (Pisahkan dengan koma)'),
+                TextInput::make('excluded_features')
+                    ->helperText('Contoh: Fitur C (Pisahkan dengan koma)'),
                 TextInput::make('delivery_days')
+                    ->label('Estimated Delivery (Days)')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->default(7),
                 Toggle::make('is_popular')
-                    ->required(),
+                    ->label('Tandai sebagai Populer')
+                    ->default(false),
                 TextInput::make('display_order')
-                    ->required()
                     ->numeric()
                     ->default(0),
             ]);

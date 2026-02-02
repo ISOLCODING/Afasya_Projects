@@ -71,6 +71,16 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         return $this->hasMany(ContactMessage::class, 'assigned_to');
     }
 
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function userPackages(): HasMany
+    {
+        return $this->hasMany(UserPackage::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatars')

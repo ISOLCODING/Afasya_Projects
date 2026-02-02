@@ -255,13 +255,13 @@ const Navbar = () => {
                      to={item.path}
                      className={cn(
                         'text-[13px] uppercase tracking-widest font-black transition-all relative py-2 mb-[-2px]',
-                        location.pathname === item.path
+                        (location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(`${item.path}/`)))
                            ? 'text-primary-600 dark:text-primary-400'
                            : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white'
                      )}
                   >
                      {item.label}
-                     {location.pathname === item.path && (
+                     {(location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(`${item.path}/`))) && (
                         <motion.div
                            layoutId="nav-underline"
                            className="absolute bottom-0 left-0 right-0 h-[3px] bg-linear-to-r from-primary-600 to-primary-300 rounded-full"
