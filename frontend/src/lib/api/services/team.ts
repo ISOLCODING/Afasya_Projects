@@ -2,7 +2,7 @@
 import apiClient from '../client';
 
 export const getTeam = async () => {
-  console.log('👥 Fetching team...');
+
   try {
     const response = await apiClient.get('/team');
     const data = response.data;
@@ -12,7 +12,7 @@ export const getTeam = async () => {
       message: data.message
     };
   } catch (error: any) {
-    console.error('❌ Error fetching team:', error);
+
     return { success: false, data: [], message: error.message || 'Failed to fetch team' };
   }
 };

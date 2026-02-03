@@ -147,53 +147,6 @@ const ServiceDetail = () => {
                                     className="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
                             </div>
-
-                            {/* Floating decorative card */}
-                            <motion.div
-                                animate={{ y: [0, -15, 0] }}
-                                whileHover={{ scale: 1.05, y: -5 }}
-                                transition={{
-                                    y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                                    scale: { duration: 0.2 }
-                                }}
-                                className="absolute -bottom-10 -left-10 bg-white/90 dark:bg-secondary-900/80 backdrop-blur-xl border border-white/20 dark:border-white/10 p-6 rounded-3xl shadow-xl dark:shadow-2xl z-20 min-w-[240px]"
-                            >
-                                <div className="flex items-center gap-4 mb-3">
-                                    <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                                        <Clock size={20} className="text-white relative z-10" />
-                                        <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5">Available Now</p>
-                                        <p className="text-secondary-900 dark:text-white text-sm font-bold">Fast Delivery</p>
-                                    </div>
-                                </div>
-                                <div className="h-1 w-full bg-secondary-100 dark:bg-white/10 rounded-full overflow-hidden">
-                                    <div className="h-full w-3/4 bg-emerald-500 rounded-full" />
-                                </div>
-                                <p className="text-secondary-500 dark:text-secondary-400 text-xs mt-3 leading-relaxed">
-                                    Tim kami siap mengerjakan proyek Anda hari ini.
-                                </p>
-                            </motion.div>
-
-                            {/* Additional Floating Badge (Right side) */}
-                            <motion.div
-                                animate={{ y: [0, 20, 0] }}
-                                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                className="absolute -top-6 -right-6 bg-white dark:bg-secondary-800 text-primary-600 p-4 rounded-2xl shadow-xl z-20 flex items-center gap-2"
-                            >
-                                <div className="flex -space-x-2">
-                                    {[1, 2, 3].map(i => (
-                                        <div key={i} className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900 border-2 border-white dark:border-secondary-800 flex items-center justify-center text-[8px] font-bold text-primary-700 dark:text-primary-300">
-                                            {i}
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="text-xs font-bold">
-                                    <span className="block text-secondary-900 dark:text-white">100+</span>
-                                    <span className="text-secondary-500 font-normal">Klien Puas</span>
-                                </div>
-                            </motion.div>
                         </div>
                     </motion.div>
                 </div>

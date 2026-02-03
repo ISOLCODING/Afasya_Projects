@@ -10,9 +10,11 @@ class BrandController extends Controller
 {
     public function index()
     {
-        $brands = Brand::where('is_active', true)
-            ->orderBy('sort_order', 'asc')
-            ->get();
+        $brands = \Illuminate\Support\Facades\Cache::remember('brands_all_v1', 3600, function () {
+            return Brand::where('is_active', true)
+                ->orderBy('sort_order', 'asc')
+                ->get();
+        });
 
         return response()->json([
             'status' => 'success',

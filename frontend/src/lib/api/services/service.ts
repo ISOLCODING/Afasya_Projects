@@ -2,7 +2,7 @@
 import apiClient from '../client';
 
 export const getServices = async () => {
-  console.log('🛠️ Fetching services...');
+
   try {
     const response = await apiClient.get('/services');
     const data = response.data;
@@ -12,7 +12,7 @@ export const getServices = async () => {
       message: data.message
     };
   } catch (error: any) {
-    console.error('❌ Error fetching services:', error);
+
     return { success: false, data: [], message: error.message || 'Failed to fetch services' };
   }
 };

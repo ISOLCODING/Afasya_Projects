@@ -13,19 +13,28 @@ import InteractiveTimeline from '@/components/ui/InteractiveTimeline';
 import FlipCard from '@/components/ui/FlipCard';
 import PricingCard from '@/components/ui/PricingCard';
 import BrandScroller from '@/components/sections/BrandScroller';
-import { getServices, getPortfolios, getTeam, getPosts } from '@/lib/api';
+import { getServices, getPortfolios, getTeam, getPosts, getBrands } from '@/lib/api';
 import { getServicePackages } from '@/lib/api/services/service_package';
 import { cn, getStorageUrl } from '@/lib/utils';
 import React from 'react';
 
 
-const BrandsMarqueeBlock = ({ data }: { data: any }) => (
-   <BrandScroller
-      title={data.title}
-      subtitle={data.subtitle}
-      description={data.description}
-   />
-);
+const BrandsMarqueeBlock = ({ data }: { data: any }) => {
+   const { data: brands, isLoading } = useQuery({
+      queryKey: ['brands-block'],
+      queryFn: () => getBrands().then(res => res.data),
+   });
+
+   return (
+      <BrandScroller
+         brands={brands || []}
+         isLoading={isLoading}
+         title={data.title}
+         subtitle={data.subtitle}
+         description={data.description}
+      />
+   );
+};
 
 const RichTextBlock = ({ data }: { data: any }) => (
    <Section background={data.background || "white"}>

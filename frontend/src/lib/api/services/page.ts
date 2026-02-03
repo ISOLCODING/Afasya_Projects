@@ -2,7 +2,7 @@
 import apiClient from '../client';
 
 export const getPage = async (slug: string) => {
-  console.log(`📄 Fetching page "${slug}"...`);
+
   try {
     const response = await apiClient.get(`/pages/${slug}`);
     const data = response.data;
@@ -12,7 +12,7 @@ export const getPage = async (slug: string) => {
       message: data.message
     };
   } catch (error: any) {
-    console.error(`❌ Error fetching page "${slug}":`, error);
+
     return { 
       success: false, 
       data: null, 

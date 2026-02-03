@@ -9,4 +9,5 @@ export * from './services/page';
 export * from './services/setting';
 export * from './services/blog';
 export * from './services/user';
+export * from './services/brand';
 export * from './services/admin';

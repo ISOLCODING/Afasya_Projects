@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Send } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getSettings } from '@/lib/api';
 import { getStorageUrl } from '@/lib/utils';
@@ -50,15 +50,23 @@ const Footer = () => {
                      {settings?.site_description || 'Solusi digital profesional untuk UMKM Indonesia. Kami membantu bisnis Anda bertransformasi ke era digital dengan website berkualitas tinggi.'}
                   </p>
                   <div className="flex gap-4">
-                     {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                        <a
-                           key={i}
-                           href="#"
-                           className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:bg-primary-600 hover:text-white hover:border-primary-500 transition-all duration-500 transform hover:-translate-y-2 group shadow-lg"
-                        >
-                           <Icon className="w-5 h-5 transition-transform duration-500 group-hover:scale-110" />
+                     {settings?.social_facebook && (
+                        <a href={settings.social_facebook} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:bg-primary-600 hover:text-white hover:border-primary-500 transition-all duration-500 transform hover:-translate-y-2 group shadow-lg">
+                           <Facebook className="w-5 h-5 transition-transform duration-500 group-hover:scale-110" />
                         </a>
-                     ))}
+                     )}
+                     {settings?.social_twitter && (
+                        <a href={settings.social_twitter} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:bg-primary-600 hover:text-white hover:border-primary-500 transition-all duration-500 transform hover:-translate-y-2 group shadow-lg">
+                           <Twitter className="w-5 h-5 transition-transform duration-500 group-hover:scale-110" />
+                        </a>
+                     )}
+                     {settings?.social_instagram && (
+                        <a href={settings.social_instagram} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:bg-primary-600 hover:text-white hover:border-primary-500 transition-all duration-500 transform hover:-translate-y-2 group shadow-lg">
+                           <Instagram className="w-5 h-5 transition-transform duration-500 group-hover:scale-110" />
+                        </a>
+                     )}
+                     {/* Linkedin fallback or specific field if exists */}
+                     {/* <a href="#" ...> <Linkedin ... /> </a> */}
                   </div>
                </div>
 
@@ -95,19 +103,19 @@ const Footer = () => {
                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/20 transition-all">
                            <MapPin className="w-5 h-5 text-primary-500" />
                         </div>
-                        <span className="pt-2 leading-relaxed">Jl. Digital Kreatif No. 123, Jakarta Selatan, Indonesia</span>
+                        <span className="pt-2 leading-relaxed">{settings?.address || 'Alamat belum tersedia'}</span>
                      </li>
                      <li className="flex items-center gap-4 text-sm text-neutral-400 group">
                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/20 transition-all">
                            <Phone className="w-5 h-5 text-primary-500" />
                         </div>
-                        <span className="font-bold">+62 821 2451 5302</span>
+                        <span className="font-bold">{settings?.contact_phone || '-'}</span>
                      </li>
                      <li className="flex items-center gap-4 text-sm text-neutral-400 group">
                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/20 transition-all">
                            <Mail className="w-5 h-5 text-primary-500" />
                         </div>
-                        <span className="font-bold">hello@afasyaprojects.com</span>
+                        <span className="font-bold">{settings?.contact_email || '-'}</span>
                      </li>
                   </ul>
                </div>

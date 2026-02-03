@@ -19,7 +19,7 @@ export const getBrands = async () => {
     const data = response.data;
     return {
       success: data.status === 'success',
-      data: (data.data as Brand[]) || [],
+      data: Array.isArray(data.data) ? data.data : (data.data?.data || data.data?.items || []),
       message: data.message
     };
   } catch (error: any) {

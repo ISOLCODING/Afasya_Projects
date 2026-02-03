@@ -2,7 +2,7 @@
 import apiClient from '../client';
 
 export const getPosts = async (params: any = {}) => {
-  console.log('📝 Fetching posts...', params);
+
   try {
     const response = await apiClient.get('/posts', { params });
     const data = response.data;
@@ -10,7 +10,7 @@ export const getPosts = async (params: any = {}) => {
     if (data.status === 'success') {
       return {
         success: true,
-        data: data.data.items,
+        data: Array.isArray(data.data) ? data.data : (data.data.items || []),
         meta: data.data.meta,
         message: data.message
       };
@@ -18,7 +18,7 @@ export const getPosts = async (params: any = {}) => {
     
     return { success: false, data: [], message: data.message };
   } catch (error: any) {
-    console.error('❌ Error fetching posts:', error);
+
     return { success: false, data: [], message: error.message || 'Failed to fetch posts' };
   }
 };

@@ -11,17 +11,23 @@ class PortfolioController extends ApiController
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Portfolio::where('is_published', true);
+        // Generate unique cache key based on filters
+        $cacheKey = 'portfolios_' . md5(json_encode($request->all()));
 
-        if ($request->has('category')) {
-            $query->where('category', $request->category);
-        }
+        $portfolios = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () use ($request) {
+            $query = Portfolio::with(['media', 'service']) // Eager load crucial relations
+                ->where('is_published', true);
 
-        if ($request->has('featured')) {
-            $query->where('is_featured', true);
-        }
+            if ($request->has('category')) {
+                $query->where('category', $request->category);
+            }
 
-        $portfolios = $query->orderBy('published_at', 'desc')->get();
+            if ($request->has('featured')) {
+                $query->where('is_featured', true);
+            }
+
+            return $query->orderBy('published_at', 'desc')->get();
+        });
 
         return $this->success(PortfolioResource::collection($portfolios));
     }

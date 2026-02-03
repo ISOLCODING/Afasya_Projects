@@ -98,10 +98,7 @@ const ServicesPage = () => {
                               <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070" alt="Service process" className="w-full h-auto" />
                         </div>
                         {/* Decorative floating stats */}
-                           <div className="absolute -top-10 -right-10 glass-card bg-secondary-900/90 text-white p-6 rounded-3xl hidden md:block border border-white/10 shadow-premium">
-                              <p className="text-sm font-bold text-secondary-400 uppercase tracking-widest mb-1">Success Rate</p>
-                              <p className="text-4xl font-extrabold text-primary-400">99%</p>
-                        </div>
+
                      </div>
                   </div>
                </Section>

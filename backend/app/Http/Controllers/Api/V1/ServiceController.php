@@ -10,9 +10,12 @@ class ServiceController extends ApiController
 {
     public function index(): JsonResponse
     {
-        $services = Service::where('is_active', true)
-            ->orderBy('display_order')
-            ->get();
+        $services = \Illuminate\Support\Facades\Cache::remember('services_all_v1', 3600, function () {
+            return Service::where('is_active', true)
+                ->with(['media', 'features', 'packages']) // Eager load relationships
+                ->orderBy('display_order')
+                ->get();
+        });
 
         return $this->success(ServiceResource::collection($services));
     }

@@ -4,7 +4,7 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { getPage } from '@/lib/api';
+import { getPage, getSettings } from '@/lib/api';
 import ContentBlocks from '@/components/sections/ContentBlocks';
 import { ContactForm } from '@/components/ui/ContactForm';
 
@@ -15,10 +15,32 @@ const ContactPage = () => {
       retry: false,
    });
 
+   const { data: settingsResponse } = useQuery({
+      queryKey: ['settings'],
+      queryFn: () => getSettings(),
+   });
+
+   const settings = settingsResponse?.success ? settingsResponse.data : null;
+
    const contactInfo = [
-      { icon: Phone, title: 'Telepon / WA', detail: '+62 812 3456 7890', sub: 'Senin - Jumat, 09:00 - 18:00' },
-      { icon: Mail, title: 'Email Kami', detail: 'hello@afasyaprojects.com', sub: 'Balasan dalam 24 jam' },
-      { icon: MapPin, title: 'Kantor Pusat', detail: 'Jl. Digital Kreatif No. 123', sub: 'Jakarta Selatan, Indonesia' },
+      {
+         icon: Phone,
+         title: 'Telepon / WA',
+         detail: settings?.contact_phone || '+62 821 2451 5302',
+         sub: 'Senin - Jumat, 09:00 - 18:00'
+      },
+      {
+         icon: Mail,
+         title: 'Email Kami',
+         detail: settings?.contact_email || 'info@afasya.com',
+         sub: 'Balasan dalam 24 jam'
+      },
+      {
+         icon: MapPin,
+         title: 'Kantor Pusat',
+         detail: settings?.address || 'Jakarta Selatan, Indonesia',
+         sub: 'Indonesia'
+      },
    ];
 
    return (
@@ -93,8 +115,8 @@ const ContactPage = () => {
                         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
                         <div className="text-center p-8 glass-card bg-secondary-950/80 backdrop-blur shadow-lg rounded-3xl relative z-10 border border-white/10 group-hover:border-primary-500/30 transition-all">
                            <MapPin className="w-10 h-10 text-primary-500 mx-auto mb-4 animate-bounce" />
-                           <h4 className="font-bold text-white mb-1">Jakarta, Indonesia</h4>
-                           <p className="text-sm text-secondary-400">Menara Digital, Jl. Rasuna Said Kav 10</p>
+                           <h4 className="font-bold text-white mb-1">Kantor Kami</h4>
+                           <p className="text-sm text-secondary-400">{settings?.address || 'Jakarta, Indonesia'}</p>
                      </div>
                   </div>
                </Section>
