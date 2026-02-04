@@ -248,19 +248,23 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-10">
+            <div className="hidden lg:flex items-center gap-1">
                {displayItems.map((item) => (
                   <Link
                      key={item.id}
                      to={item.path}
                      className={cn(
-                        'text-[13px] uppercase tracking-widest font-black transition-all relative py-2 mb-[-2px]',
+                        'text-[13px] uppercase tracking-widest font-black transition-all relative py-2.5 px-4 rounded-xl group overflow-hidden',
                         (location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(`${item.path}/`)))
                            ? 'text-primary-600 dark:text-primary-400'
-                           : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white'
+                           : 'text-neutral-500 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 hover:bg-black/5 dark:hover:bg-white/5'
                      )}
                   >
-                     {item.label}
+                     <span className="relative z-10 transition-transform duration-300 group-hover:scale-110 block">
+                        {item.label}
+                     </span>
+
+                     {/* Underline for active state */}
                      {(location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(`${item.path}/`))) && (
                         <motion.div
                            layoutId="nav-underline"
@@ -268,6 +272,9 @@ const Navbar = () => {
                            transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                         />
                      )}
+
+                     {/* Subtle hover effect for inactive states */}
+                     <span className="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/5 dark:group-hover:bg-primary-400/10 transition-colors duration-300" />
                   </Link>
                ))}
             </div>
@@ -276,7 +283,7 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center gap-4">
                <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                  className="p-2.5 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-neutral-600 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-300"
                   aria-label="Toggle Theme"
                >
                   {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -286,9 +293,9 @@ const Navbar = () => {
                   href={`https://wa.me/${whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative group px-7 py-3 overflow-hidden rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(13,139,242,0.2)] hover:shadow-[0_0_25px_rgba(13,139,242,0.4)]"
+                  className="relative group px-7 py-3 overflow-hidden rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(13,139,242,0.2)] hover:shadow-[0_0_25px_rgba(13,139,242,0.4)] active:scale-95"
                >
-                  <div className="absolute inset-0 bg-primary-600 transition-transform duration-300 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-linear-to-r from-primary-600 to-primary-500 transition-transform duration-300 group-hover:scale-105" />
                   <div className="relative flex items-center gap-2 text-white">
                      Konsultasi Gratis
                      <ArrowUpRight className="w-4 h-4 translate-y-0.5 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
@@ -331,10 +338,10 @@ const Navbar = () => {
                            <Link
                               to={item.path}
                               className={cn(
-                                 'text-2xl font-display font-bold py-4 px-6 rounded-2xl transition-all flex items-center justify-between group',
+                                 'text-xl font-display font-bold py-4 px-6 rounded-2xl transition-all flex items-center justify-between group',
                                  location.pathname === item.path
-                                    ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20'
-                                    : 'text-neutral-300 dark:text-neutral-400 hover:bg-white/5 hover:text-white'
+                                    ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20'
+                                    : 'text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 hover:text-primary-600 dark:hover:text-white'
                               )}
                               onClick={() => setIsMobileMenuOpen(false)}
                            >

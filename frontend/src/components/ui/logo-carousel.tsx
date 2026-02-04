@@ -117,7 +117,7 @@ export function LogoCarousel({ columns = 2, logos }: LogoCarouselProps) {
     }, 100);
     return () => clearInterval(interval);
   }, []);
-
+ 
   return (
     <div className="flex justify-center gap-4 md:gap-8 py-8">
       {logoColumns.map((columnLogos, index) => (
