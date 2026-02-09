@@ -289,6 +289,68 @@ class ContentPageSeeder extends Seeder
                 'template' => 'blog',
                 'is_in_menu' => true,
                 'menu_order' => 5,
+            ],
+            [
+                'title' => 'Tim Kami',
+                'slug' => 'team',
+                'excerpt' => 'Bertemu dengan tim profesional yang akan membantu transformasi digital bisnis Anda.',
+                'content' => [
+                    [
+                        'type' => 'hero',
+                        'data' => [
+                            'title' => 'Mengenal <span class="text-primary-500">Tim Ahli</span> Afasya Projects',
+                            'subtitle' => 'Kami adalah tim profesional yang berdedikasi untuk membantu transformasi digital bisnis Anda dengan solusi inovatif dan terpercaya.',
+                            'cta_text' => 'Hubungi Kami',
+                            'cta_link' => '/contact',
+                            'image' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200'
+                        ]
+                    ],
+                    [
+                        'type' => 'team_grid',
+                        'data' => [
+                            'title' => 'Tim Profesional Kami',
+                            'description' => 'Bertemu dengan para ahli yang akan membantu mewujudkan visi digital bisnis Anda.',
+                            'limit' => null
+                        ]
+                    ],
+                    [
+                        'type' => 'stats_showcase',
+                        'data' => [
+                            'title' => 'Pengalaman & Keahlian',
+                            'stats' => [
+                                [
+                                    'value' => '10+',
+                                    'label' => 'Tahun Pengalaman',
+                                    'description' => 'Pengalaman kolektif tim dalam industri digital'
+                                ],
+                                [
+                                    'value' => '50+',
+                                    'label' => 'Proyek Selesai',
+                                    'description' => 'Proyek sukses yang telah kami kerjakan'
+                                ],
+                                [
+                                    'value' => '100%',
+                                    'label' => 'Kepuasan Klien',
+                                    'description' => 'Komitmen kami untuk hasil terbaik'
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        'type' => 'cta_section',
+                        'data' => [
+                            'title' => 'Ingin Bergabung dengan Tim Kami?',
+                            'description' => 'Kami selalu mencari talenta-talenta terbaik untuk bergabung dalam tim kami. Jika Anda passionate tentang teknologi dan ingin membuat dampak, mari berbicara.',
+                            'button_text' => 'Kirim CV',
+                            'button_link' => 'mailto:career@afasya.com',
+                            'theme' => 'primary'
+                        ]
+                    ]
+                ],
+                'page_type' => 'team',
+                'template' => 'team',
+                'is_in_menu' => true,
+                'menu_order' => 6,
             ]
         ];
 
