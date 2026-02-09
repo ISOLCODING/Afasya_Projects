@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+
 import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
 import PortfolioCard from '@/components/ui/PortfolioCard';
 import { getPortfolios, getPage } from '@/lib/api';
 import ContentBlocks from '@/components/sections/ContentBlocks';
+import { getWhatsAppLink, getConsultationMessage } from '@/lib/whatsapp';
 
 const PortfolioPage = () => {
    const [activeCategory, setActiveCategory] = useState('Semua');
@@ -131,7 +132,7 @@ const PortfolioPage = () => {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="aspect-[3/4] bg-secondary-50 rounded-[48px] animate-pulse overflow-hidden relative"
+                                    className="aspect-3/4 bg-secondary-50 rounded-[48px] animate-pulse overflow-hidden relative"
                                  >
                                     <div className="absolute bottom-8 left-8 right-8 space-y-4">
                                        <div className="h-4 w-24 bg-secondary-200 rounded-full" />
@@ -186,12 +187,15 @@ const PortfolioPage = () => {
                               Jangan biarkan ide hebat Anda hanya menjadi angan-angan. 
                               Mari kita bangun kehadiran digital yang luar biasa bersama Afasya Project.
                            </p>
-                           <Link 
-                              to="/contact" 
-                              className="btn bg-white text-primary-600 hover:bg-secondary-900 hover:text-white px-12 h-20 text-xl font-bold rounded-[24px] shadow-2xl shadow-primary-900/20 transition-all duration-500"
-                           >
-                              Mulai Konsultasi Gratis
-                           </Link>
+                              <button
+                                 onClick={() => {
+                                    const link = getWhatsAppLink(getConsultationMessage());
+                                    window.open(link, '_blank');
+                                 }}
+                                 className="btn bg-white text-primary-600 hover:bg-secondary-900 hover:text-white px-12 h-20 text-xl font-bold rounded-[24px] shadow-2xl shadow-primary-900/20 transition-all duration-500"
+                              >
+                                 Mulai Konsultasi Gratis
+                              </button>
                         </div>
                      </div>
                   </div>

@@ -6,13 +6,16 @@ import {
     ChevronLeft, 
     Clock, 
     Star,
-    MessageSquare
+    MessageSquare,
+    ArrowRight
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ServiceEstimator from '@/components/services/ServiceEstimator';
 import { getServiceBySlug } from '@/lib/api';
+import { getWhatsAppLink, getConsultationMessage } from '@/lib/whatsapp';
+import { getIconByName } from '@/lib/icons';
 
 const container = {
     hidden: { opacity: 0 },
@@ -126,6 +129,19 @@ const ServiceDetail = () => {
                                     <p className="text-secondary-900 dark:text-white font-bold">{service.delivery_time || '7 - 14 Hari Kerja'}</p>
                                 </div>
                             </div>
+
+                            {service.sub_services && service.sub_services.length > 0 && (
+                                <>
+                                    <div className="h-10 w-px bg-secondary-200 dark:bg-white/10 hidden md:block" />
+                                    <div className="flex flex-wrap gap-2 max-w-md">
+                                        {service.sub_services.map((sub: string, i: number) => (
+                                            <span key={i} className="px-3 py-1 rounded-full bg-secondary-100 dark:bg-white/10 text-[10px] font-bold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">
+                                                {sub}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                         </motion.div>
                     </motion.div>
 
@@ -225,7 +241,10 @@ const ServiceDetail = () => {
                                     className="p-8 rounded-[32px] bg-white dark:bg-white/5 border border-secondary-100 dark:border-white/5 shadow-sm hover:shadow-lg dark:hover:bg-white/10 transition-all group"
                                 >
                                     <div className="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-6 group-hover:scale-110 transition-transform">
-                                        <CheckCircle2 size={24} />
+                                        {(() => {
+                                            const Icon = getIconByName(feature.icon) || CheckCircle2;
+                                            return <Icon size={24} />;
+                                        })()}
                                     </div>
                                     <h4 className="text-xl font-display font-bold text-secondary-900 dark:text-white mb-3">{feature.name}</h4>
                                     <p className="text-secondary-600 dark:text-secondary-400 leading-relaxed">{feature.description}</p>
@@ -252,7 +271,14 @@ const ServiceDetail = () => {
                                 <p className="text-primary-100 text-lg mb-10 leading-relaxed">
                                     Bisnis Anda unik, begitu juga solusinya. Konsultasikan kebutuhan spesifik Anda dan dapatkan penawaran custom yang presisi.
                                 </p>
-                                <button className="inline-flex items-center gap-2 bg-white text-primary-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-secondary-50 transition-colors shadow-xl shadow-black/10">
+                                <button
+                                    onClick={() => {
+                                        const message = getConsultationMessage(service.name);
+                                        const link = getWhatsAppLink(message);
+                                        window.open(link, '_blank');
+                                    }}
+                                    className="inline-flex items-center gap-2 bg-white text-primary-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-secondary-50 transition-colors shadow-xl shadow-black/10"
+                                >
                                     <MessageSquare size={20} />
                                     <span>Konsultasi Gratis</span>
                                 </button>
@@ -260,7 +286,47 @@ const ServiceDetail = () => {
                         </motion.div>
                     </div>
 
-                    {/* 3. Full Width Pricing & Estimator */}
+                    {/* 3. Workflow Section */}
+                    <div className="relative z-10">
+                        <SectionHeader
+                            align="center"
+                            subtitle="Cara Kami Bekerja"
+                            title="Proses Transparan, Hasil Maksimal"
+                            description="Langkah-langkah profesional kami untuk memastikan setiap detail proyek Anda dikerjakan dengan sempurna."
+                            className="mb-16"
+                        />
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            {[
+                                { title: 'Analisis & Riset', desc: 'Identifikasi kebutuhan dan target audiens bisnis Anda.', icon: '01' },
+                                { title: 'Desain & UI/UX', desc: 'Pembuatan mockup visual yang modern dan user-friendly.', icon: '02' },
+                                { title: 'Development', desc: 'Coding presisi dengan teknologi terkini dan performa tinggi.', icon: '03' },
+                                { title: 'Launch & QA', desc: 'Pengujian ketat sebelum go-live untuk kualitas terbaik.', icon: '04' }
+                            ].map((step, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className="relative p-8 rounded-[40px] bg-white dark:bg-white/5 border border-secondary-100 dark:border-white/10 text-center group"
+                                >
+                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-secondary-900 dark:bg-white text-white dark:text-secondary-950 flex items-center justify-center font-black text-xl shadow-xl group-hover:scale-110 transition-transform">
+                                        {step.icon}
+                                    </div>
+                                    <h4 className="text-xl font-bold text-secondary-900 dark:text-white mb-3 mt-4">{step.title}</h4>
+                                    <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed">{step.desc}</p>
+
+                                    {idx < 3 && (
+                                        <div className="hidden md:block absolute top-1/2 -right-4 translate-x-1/2 -translate-y-1/2 z-20">
+                                            <ArrowRight size={24} className="text-primary-500/30" />
+                                        </div>
+                                    )}
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 4. Full Width Pricing & Estimator */}
                     <div className="relative z-10">
                         <SectionHeader
                             align="center"

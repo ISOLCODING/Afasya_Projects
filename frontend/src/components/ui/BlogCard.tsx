@@ -36,7 +36,7 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
          whileInView={{ opacity: 1, y: 0 }}
          viewport={{ once: true }}
          transition={{ delay: index * 0.1, duration: 0.5 }}
-         className="group glass-card bg-white dark:bg-secondary-900/40 rounded-[32px] overflow-hidden border border-neutral-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:shadow-primary-600/10 transition-all duration-500 flex flex-col h-full"
+         className="group glass-card bg-white/80 dark:bg-neutral-900/60 backdrop-blur-xl rounded-[32px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-sm hover:shadow-[0_20px_50px_rgba(8,112,184,0.1)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 flex flex-col h-full"
       >
          <Link to={`/blog/${post.slug}`} className="relative h-64 overflow-hidden block">
             {post.image_url ? (

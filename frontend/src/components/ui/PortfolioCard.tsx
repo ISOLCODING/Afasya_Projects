@@ -19,8 +19,12 @@ const PortfolioCard = ({ title, category, image, slug, index }: PortfolioCardPro
          whileInView={{ opacity: 1, y: 0 }}
          viewport={{ once: true }}
          transition={{ duration: 0.6, delay: index * 0.1 }}
-         className="group relative rounded-[40px] overflow-hidden bg-linear-to-br from-primary-900 to-primary-950 aspect-4/5 md:aspect-3/4 shadow-2xl hover:shadow-primary-600/30 transition-all duration-500"
+         className="group relative bg-neutral-900 aspect-4/5 md:aspect-3/4 overflow-hidden rounded-[40px] shadow-2xl transition-all duration-700 hover:shadow-primary-500/20 border border-white/10 hover:border-white/30"
       >
+         {/* Premium Glow Effect on Hover */}
+         <div className="absolute inset-0 bg-linear-to-br from-primary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+         <div className="absolute -inset-full bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer pointer-events-none" />
+         <div className="absolute inset-0 z-10 bg-linear-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
          <Link to={`/portfolio/${slug}`} className="absolute inset-0 z-20" aria-label={`View ${title}`} />
 
          <motion.img

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Section from '@/components/layout/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ServiceCard from '@/components/ui/ServiceCard';
@@ -15,8 +15,11 @@ import PricingCard from '@/components/ui/PricingCard';
 import BrandScroller from '@/components/sections/BrandScroller';
 import { getServices, getPortfolios, getTeam, getPosts } from '@/lib/api';
 import { getServicePackages } from '@/lib/api/services/service_package';
+import { getServiceIcon } from '@/lib/icons';
 import { cn, getStorageUrl } from '@/lib/utils';
 import React from 'react';
+import ServiceTypeShowcase from '@/components/services/ServiceTypeShowcase';
+import ServiceDetailsTabs from '@/components/services/ServiceDetailsTabs';
 
 
 const BrandsMarqueeBlock = ({ data }: { data: any }) => (
@@ -160,12 +163,14 @@ const ServicesGridBlock = ({ data }: { data: any }) => {
    });
 
    return (
-      <Section background="gray">
+      <Section background="gray" className="relative group/grid">
+         <div className="absolute inset-0 bg-linear-to-b from-transparent via-primary-500/5 to-transparent pointer-events-none" />
+
          <SectionHeader
             title={data.title}
             description={data.description}
          />
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {services?.map((service: any, idx: number) => (
                <ServiceCard
                   key={service.slug}
@@ -173,7 +178,9 @@ const ServicesGridBlock = ({ data }: { data: any }) => {
                   description={service.short_description}
                   slug={service.slug}
                   index={idx}
-                  icon={CheckCircle} // Fallback icon
+                  icon={getServiceIcon(service.name, service.icon)}
+                  startingPrice={service.starting_price || service.price_min}
+                  deliveryTime={service.delivery_time}
                />
             ))}
          </div>
@@ -384,6 +391,47 @@ const PricingBlock = ({ data }: { data: any }) => {
    );
 };
 
+const ServiceShowcaseBlock = ({ data }: { data: any }) => {
+   const { data: services } = useQuery({
+      queryKey: ['services-showcase'],
+      queryFn: () => getServices().then(res => res.data),
+   });
+
+   return (
+      <Section>
+         <ServiceTypeShowcase
+            services={services || []}
+            title={data.title}
+            subtitle={data.subtitle}
+            description={data.description}
+         />
+      </Section>
+   );
+};
+
+const ServiceTabsBlock = ({ data }: { data: any }) => {
+   const { data: services } = useQuery({
+      queryKey: ['services-tabs'],
+      queryFn: () => getServices().then(res => res.data),
+   });
+
+   return (
+      <Section background="gray" className="relative overflow-hidden">
+         <div className="absolute inset-0 bg-linear-to-b from-transparent via-primary-500/5 to-transparent pointer-events-none" />
+         <SectionHeader
+            align="center"
+            subtitle={data.subtitle || "Analisis Mendalam"}
+            title={data.title || "Detail & Spesifikasi Layanan"}
+            description={data.description}
+            className="mb-16"
+         />
+         <div className="relative z-10">
+            <ServiceDetailsTabs services={services || []} />
+         </div>
+      </Section>
+   );
+};
+
 const ContentBlocks = ({ blocks }: { blocks: any[] }) => {
    if (!blocks || !Array.isArray(blocks)) return null;
 
@@ -417,6 +465,10 @@ const ContentBlocks = ({ blocks }: { blocks: any[] }) => {
                   return <BrandsMarqueeBlock key={index} data={block.data} />;
                case 'pricing_grid':
                   return <PricingBlock key={index} data={block.data} />;
+               case 'service_showcase':
+                  return <ServiceShowcaseBlock key={index} data={block.data} />;
+               case 'service_tabs':
+                  return <ServiceTabsBlock key={index} data={block.data} />;
                default:
                   return null;
             }

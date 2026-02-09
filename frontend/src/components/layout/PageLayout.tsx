@@ -7,6 +7,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { getSettings } from '@/lib/api';
 import { getStorageUrl } from '@/lib/utils';
+import PointerGlow from '../ui/PointerGlow';
 
 interface PageLayoutProps {
    children: ReactNode;
@@ -66,6 +67,9 @@ const PageLayout = ({ children }: PageLayoutProps) => {
             <div className="absolute bottom-[20%] right-[5%] w-px h-32 bg-linear-to-b from-transparent via-accent-500/20 to-transparent" />
          </div>
 
+         {/* Cursor Glow Effect */}
+         <PointerGlow />
+
          {/* Navigation Container */}
          <header className="relative z-50">
             <Navbar />
@@ -73,7 +77,14 @@ const PageLayout = ({ children }: PageLayoutProps) => {
 
          {/* Main Content Area */}
          <main id="main-content" className="grow relative z-10 antialiased">
-            {children}
+            <motion.div
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -10 }}
+               transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+               {children}
+            </motion.div>
          </main>
 
          {/* Footer Area */}

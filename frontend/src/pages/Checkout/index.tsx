@@ -16,6 +16,7 @@ import { cn, getStorageUrl } from '@/lib/utils';
 import { getServicePackages, type ServicePackage } from '@/lib/api/services/service_package';
 import { getPaymentMethods, type PaymentMethod } from '@/lib/api/services/payment_method';
 import { createOrder, uploadPaymentProof } from '@/lib/api/services/order';
+import { getWhatsAppLink, getServicePurchaseMessage } from '@/lib/whatsapp';
 
 const CheckoutPage = () => {
     const { packageId } = useParams();
@@ -35,18 +36,18 @@ const CheckoutPage = () => {
         const fetchData = async () => {
             if (!packageId) return;
             
-            const [pkgRes, pmRes] = await Promise.all([
+            const [pkgRes] = await Promise.all([
                 getServicePackages([parseInt(packageId)]),
-                getPaymentMethods()
             ]);
             
             if (pkgRes.success && pkgRes.data.length > 0) {
-                setPkg(pkgRes.data[0]);
+                const fetchedPkg = pkgRes.data[0];
+                const message = getServicePurchaseMessage(fetchedPkg.service?.name || 'Layanan', fetchedPkg.package_name);
+                const link = getWhatsAppLink(message);
+                window.location.href = link;
+            } else {
+                setLoading(false);
             }
-            if (pmRes.success) {
-                setPaymentMethods(pmRes.data);
-            }
-            setLoading(false);
         };
         
         fetchData();

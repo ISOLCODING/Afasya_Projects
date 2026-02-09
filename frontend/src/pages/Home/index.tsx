@@ -7,8 +7,6 @@ import {
    ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-
 import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -19,10 +17,10 @@ import BlogCard from '@/components/ui/BlogCard';
 import ContentBlocks from '@/components/sections/ContentBlocks';
 import BrandScroller from '@/components/sections/BrandScroller';
 import Hero from '@/components/sections/Hero';
-import { getServices, getPortfolios, getSettings, getPage, getTeam, getPosts } from '@/lib/api';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { getServices, getPortfolios, getSettings, getPage, getTeam, getPosts, getBrands } from '@/lib/api';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
-import { cn } from '@/lib/utils';
+import { getWhatsAppLink, getConsultationMessage } from '@/lib/whatsapp';
+import { Skeleton, SkeletonGrid } from '@/components/ui/Skeleton';
 
 // Helper untuk Service Icons
 const getServiceIcon = (name: string) => {
@@ -35,77 +33,69 @@ const getServiceIcon = (name: string) => {
 };
 
 const Home = () => {
-   const [debugMode] = useState(import.meta.env.DEV);
+   // Query Options for better caching and performance
+   const queryOptions = {
+      staleTime: 1000 * 60 * 10, // 10 minutes
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: 1
+   };
 
-   // 1. Fetch Dynamic Page Structure
-   const {
-      data: pageResponse,
-      isLoading: pageLoading
-   } = useQuery({
+   // Fetch all data
+   const { data: pageResponse } = useQuery({
       queryKey: ['page', 'home'],
       queryFn: () => getPage('home'),
-      retry: 1,
-   });
+     ...queryOptions
+  });
 
    const { data: servicesResponse, isLoading: servicesLoading } = useQuery({
       queryKey: ['services'],
       queryFn: () => getServices(),
-      retry: 1,
+     ...queryOptions
+  });
+
+   const {
+      data: brandsResponse,
+      isLoading: brandsLoading,
+      error: brandsError
+   } = useQuery({
+      queryKey: ['brands'],
+      queryFn: () => getBrands(),
+      ...queryOptions
    });
 
-   const { data: portfoliosResponse, isLoading: portfoliosLoading } = useQuery({
+   const { data: portfoliosResponse } = useQuery({
       queryKey: ['featured-portfolios'],
       queryFn: () => getPortfolios({ featured: true, limit: 3 }),
-      retry: 1,
-   });
+     ...queryOptions
+  });
 
-   const { data: teamResponse, isLoading: teamLoading } = useQuery({
+   const { data: teamResponse } = useQuery({
       queryKey: ['team'],
       queryFn: () => getTeam(),
-      retry: 1,
-   });
+     ...queryOptions
+  });
 
-   const { data: postsResponse, isLoading: postsLoading } = useQuery({
+   const { data: postsResponse } = useQuery({
       queryKey: ['recent-posts'],
       queryFn: () => getPosts({ limit: 3, published: true }),
-      retry: 1,
-   });
+     ...queryOptions
+  });
 
-   const { data: settingsResponse, isLoading: settingsLoading } = useQuery({
+   const { data: settingsResponse } = useQuery({
       queryKey: ['settings'],
       queryFn: () => getSettings(),
-      retry: 1,
-   });
+     ...queryOptions
+  });
 
-   // Debug: Log semua response
-   useEffect(() => {
-      if (debugMode) {
-         console.log('🔍 ===== HOME DATA DEBUG =====');
-         console.log('Portfolios Response:', portfoliosResponse);
-         console.log('Posts Response:', postsResponse);
-         console.log('=============================');
-      }
-   }, [pageResponse, servicesResponse, portfoliosResponse, teamResponse, postsResponse, settingsResponse, debugMode]);
-
-   // Ekstrak data dengan aman
+   // Extract data
    const pageData = pageResponse?.success ? pageResponse.data : null;
    const servicesData = servicesResponse?.success && Array.isArray(servicesResponse.data) ? servicesResponse.data : [];
    const portfoliosData = portfoliosResponse?.success && Array.isArray(portfoliosResponse.data) ? portfoliosResponse.data : [];
    const teamData = teamResponse?.success && Array.isArray(teamResponse.data) ? teamResponse.data : [];
    const postsData = postsResponse?.success && Array.isArray(postsResponse.data) ? postsResponse.data : [];
+   const brandsData = brandsResponse?.success && Array.isArray(brandsResponse.data) ? brandsResponse.data : [];
    const settingsData = settingsResponse?.success ? settingsResponse.data : {};
-
-   // Loading state
-   const isLoading = pageLoading || servicesLoading || portfoliosLoading ||
-      teamLoading || postsLoading || settingsLoading;
-
-   if (isLoading) {
-      return (
-         <PageLayout>
-            <LoadingSpinner message="Memuat data dari server..." />
-         </PageLayout>
-      );
-   }
 
    // Check if we should show content blocks
    const shouldShowContentBlocks = pageData?.content &&
@@ -115,7 +105,7 @@ const Home = () => {
    const siteTitle = settingsData?.site_name || 'Afasya Projects';
    const siteDesc = settingsData?.site_description || 'Solusi Digital Terpercaya untuk UMKM';
 
-   // Features untuk default layout
+   // Features
    const features = [
       { title: 'Pengerjaan Cepat', desc: 'Website Anda bisa online dalam waktu 3-7 hari kerja.', icon: Zap },
       { title: 'Optimasi SEO', desc: 'Website dirancang agar mudah ditemukan di Google.', icon: Search },
@@ -123,504 +113,334 @@ const Home = () => {
       { title: 'Support Berkelanjutan', desc: 'Kami siap membantu pemeliharaan website Anda.', icon: MessageSquare }
    ];
 
+   // Loading state - We now use section-based skeletons instead of a full-page loader
+   // const isLoading = pageLoading || servicesLoading || brandsLoading;
+
    return (
       <PageLayout>
          {/* Jika admin sudah mengisi content di CMS */}
          {shouldShowContentBlocks ? (
             <ContentBlocks blocks={pageData.content} />
          ) : (
-            /* DEFAULT LAYOUT - dengan data dinamis dari API */
-            <>
-               {/* Hero Section */}
+               /* DEFAULT LAYOUT */
+               <>
+                  {/* Hero Section */}
                   <Hero
-                  title={siteTitle}
-                  description={siteDesc}
-                  image="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070"
+                     title={siteTitle}
+                     description={siteDesc}
+                     image="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070"
+                     ctaButton={{
+                        text: 'Konsultasi Gratis',
+                        link: '/konsultasi'
+                     }}
+                     stats={[
+                        { value: servicesData.length || 0, label: 'Layanan' },
+                        { value: portfoliosData.length || 0, label: 'Portfolio' },
+                        { value: teamData.length || 0, label: 'Tim Ahli' },
+                        { value: postsData.length || 0, label: 'Artikel' }
+                     ]}
                   />
 
-               <BrandScroller />
-
-               {/* Debug Info */}
-               {debugMode && (
-                     <div className="fixed top-20 right-4 z-50 bg-primary-950/90 border border-primary-500/30 text-white p-4 rounded-2xl shadow-2xl max-w-xs backdrop-blur-xl">
-                     <div className="text-sm font-display font-bold mb-3 flex items-center gap-2 border-b border-white/10 pb-2">
-                        <span className="text-primary-400">📊</span> DATA STATUS
-                     </div>
-                     <div className="text-xs space-y-2 mb-3">
-                        <div className="flex justify-between">
-                           <span className="text-secondary-400">Services:</span>
-                           <span className={servicesData.length > 0 ? "text-green-400" : "text-amber-400"}>{servicesData.length} items</span>
+                  {/* Brand Section */}
+                  <div className="py-10">
+                     {brandsLoading ? (
+                        <div className="container-custom">
+                           <div className="flex justify-center gap-8 overflow-hidden">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                 <Skeleton key={i} className="h-12 w-32 rounded-lg" />
+                              ))}
+                           </div>
                         </div>
-                        <div className="flex justify-between">
-                           <span className="text-secondary-400">Portfolios:</span>
-                           <span className={portfoliosData.length > 0 ? "text-green-400" : "text-amber-400"}>{portfoliosData.length} items</span>
-                        </div>
-                        <div className="flex justify-between">
-                           <span className="text-secondary-400">Team:</span>
-                           <span className={teamData.length > 0 ? "text-green-400" : "text-amber-400"}>{teamData.length} items</span>
-                        </div>
-                        <div className="flex justify-between">
-                           <span className="text-secondary-400">Posts:</span>
-                           <span className={postsData.length > 0 ? "text-green-400" : "text-amber-400"}>{postsData.length} items</span>
-                        </div>
-                     </div>
-
-                     {(!servicesResponse?.success || !portfoliosResponse?.success || !postsResponse?.success || !pageResponse?.success) && (
-                        <div className="text-[10px] text-red-400 mt-2 p-2 bg-red-500/10 rounded border border-red-500/20">
-                           <strong>Errors:</strong>
-                           {!pageResponse?.success && <div className="mt-1 flex gap-1"><span>•</span> Page: {pageResponse?.message}</div>}
-                           {!servicesResponse?.success && <div className="mt-1 flex gap-1"><span>•</span> Service: {servicesResponse?.message}</div>}
-                           {!portfoliosResponse?.success && <div className="mt-1 flex gap-1"><span>•</span> Portfolio: {portfoliosResponse?.message}</div>}
-                           {!postsResponse?.success && <div className="mt-1 flex gap-1"><span>•</span> Posts: {postsResponse?.message}</div>}
-                        </div>
-                     )}
-
-                     <div className="text-[9px] text-secondary-500 mt-3 pt-2 border-t border-white/5 break-all">
-                        API: {import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'}
-                     </div>
-                  </div>
-               )}
-
-               {/* Services Section - DINAMIS dari API */}
-               <Section background="gray" id="services">
-                  <SectionHeader
-                     subtitle="Layanan Unggulan"
-                     title="Solusi Digital Lengkap untuk Bisnis Anda"
-                     description="Kami menyediakan berbagai layanan pengembangan web yang dirancang khusus untuk meningkatkan omzet UMKM."
-                  />
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                     {servicesData.length > 0 ? (
-                        servicesData.slice(0, 3).map((service: any, idx: number) => (
-                           <ServiceCard
-                              key={service.id || service.slug || idx}
-                              title={service.name || service.title}
-                              description={service.short_description || service.description || ''}
-                              icon={getServiceIcon(service.name || service.title)}
-                              slug={service.slug}
-                              image={service.featured_image || service.image}
-                              index={idx}
-                           />
-                        ))
                      ) : (
-                        // Fallback jika belum ada data
-                        <>
-                           <ServiceCard
-                              title="Web Development"
-                              description="Pembuatan website profesional untuk UMKM"
-                              icon={Layout}
-                              slug="web-development"
-                              index={0}
+                        brandsData.length > 0 && (
+                           <BrandScroller
+                              brands={brandsData}
+                              isLoading={brandsLoading}
+                              error={brandsError}
+                              title="Partner Collaboration"
+                              subtitle="Dipercaya Oleh Brand Ternama"
+                              description="Kami bangga bekerja sama dengan perusahaan-perusahaan inovatif untuk menghadirkan solusi digital terbaik."
                            />
-                           <ServiceCard
-                              title="Mobile App"
-                              description="Aplikasi mobile iOS & Android"
-                              icon={Smartphone}
-                              slug="mobile-app"
-                              index={1}
-                           />
-                           <ServiceCard
-                              title="SEO Optimization"
-                              description="Optimasi website di mesin pencari"
-                              icon={Search}
-                              slug="seo-optimization"
-                              index={2}
-                           />
-                        </>
+                           )
                      )}
                   </div>
 
-                  <div className="mt-16 text-center">
-                     <Link to="/services" className="btn btn-secondary group">
-                        Lihat Semua Layanan
-                        <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                     </Link>
-                  </div>
-               </Section>
-
-               {/* Why Choose Us Section */}
-               <Section>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                     <div className="relative">
-                        <div className="grid grid-cols-2 gap-4">
-                           <div className="pt-12">
-                              <img
-                                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600"
-                                 alt="Team"
-                                 className="rounded-3xl shadow-xl mb-4 h-64 object-cover w-full"
-                              />
-                              <div className="bg-primary-600 p-8 rounded-3xl text-white">
-                                 <p className="text-4xl font-bold mb-1">5+</p>
-                                 <p className="text-xs uppercase font-bold tracking-widest opacity-80">Tahun Pengalaman</p>
-                              </div>
-                           </div>
-                           <div>
-                              <img
-                                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=600"
-                                 alt="Design"
-                                 className="rounded-3xl shadow-xl mb-4 h-80 object-cover w-full"
-                              />
-                              <img
-                                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600"
-                                 alt="Analytics"
-                                 className="rounded-3xl shadow-xl h-48 object-cover w-full"
-                              />
-                           </div>
+                  {/* Services Section */}
+                  <Section id="layanan" className="py-20 bg-linear-to-b from-white to-neutral-50 dark:from-secondary-950 dark:to-secondary-900">
+                     <div className="container-custom">
+                        <SectionHeader
+                           title="Layanan Digital Terintegrasi"
+                           subtitle="Solusi Lengkap untuk Bisnis Anda"
+                           description="Kami menyediakan solusi end-to-end untuk memastikan bisnis Anda sukses di dunia digital."
+                           align="center"
+                        />
+                        <div className="mt-16">
+                           {servicesLoading ? (
+                              <SkeletonGrid count={6} />
+                           ) : (
+                              servicesData.length > 0 && (
+                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {servicesData.map((service, index) => (
+                                       <ServiceCard
+                                          key={service.id}
+                                          title={service.title}
+                                          description={service.description}
+                                          icon={getServiceIcon(service.title)}
+                                          index={index}
+                                          slug={service.slug}
+                                       />
+                                    ))}
+                                 </div>
+                              )
+                           )}
                         </div>
                      </div>
+                  </Section>
 
-                     <div>
+                  {/* Features Section */}
+                  <Section className="py-20 bg-linear-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950/20 dark:via-secondary-900 dark:to-accent-950/20">
+                     <div className="container-custom">
                         <SectionHeader
-                           align="left"
-                           subtitle="Mengapa Afasya?"
-                           title="Partner Digital Terbaik untuk Transformasi Bisnis UMKM"
-                           description="Kami memahami tantangan pemilik usaha. Solusi kami tidak hanya cantik, tapi juga efektif."
-                           className="mb-10"
+                           title="Mengapa Memilih Kami"
+                           subtitle="Keunggulan Afasya Projects"
+                           description="Komitmen kami memberikan solusi terbaik dengan pelayanan maksimal untuk kesuksesan bisnis digital Anda."
+                           align="center"
                         />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                           {features.map((feature, idx) => (
-                              <div key={idx} className="flex gap-4">
-                                 <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 shrink-0">
-                                    <feature.icon className="w-6 h-6" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+                           {features.map((feature, index) => (
+                              <motion.div
+                                 key={index}
+                                 initial={{ opacity: 0, y: 30 }}
+                                 whileInView={{ opacity: 1, y: 0 }}
+                                 viewport={{ once: true }}
+                                 transition={{ delay: index * 0.1 }}
+                                 className="group"
+                              >
+                                 <div className="p-6 rounded-3xl bg-white/80 dark:bg-white/5 border-2 border-neutral-200/50 dark:border-white/10 backdrop-blur-sm hover:border-primary-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-primary-500/10">
+                                    <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                                       <feature.icon size={24} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-neutral-950 dark:text-white mb-3">{feature.title}</h3>
+                                    <p className="text-neutral-600 dark:text-neutral-400">{feature.desc}</p>
                                  </div>
-                                 <div>
-                                    <h4 className="font-bold text-secondary-900 mb-2">{feature.title}</h4>
-                                    <p className="text-sm text-secondary-500 leading-relaxed">{feature.desc}</p>
-                                 </div>
-                              </div>
+                              </motion.div>
                            ))}
                         </div>
                      </div>
-                  </div>
-               </Section>
+                  </Section>
 
-               {/* Portfolio Section - FIXED untuk database */}
-               <Section background="dark" id="portfolio">
-                  <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-                     <SectionHeader
-                        align="left"
-                        light
-                        subtitle="Hasil Karya"
-                        title="Project Pilihan dari Klien Terpercaya"
-                        description="Lihat project-project terbaik yang telah kami selesaikan untuk berbagai klien."
-                        className="mb-0"
-                     />
-                     <Link to="/portfolio" className="btn border-primary-500/50 text-white hover:bg-primary-600 border px-8 py-3 rounded-full mb-2">
-                        Lihat Semua Project
-                     </Link>
-                  </div>
-
-                  {debugMode && (
-                     <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
-                        <div className="text-yellow-600 text-sm font-medium mb-1">
-                           🔍 Portfolio Debug: {portfoliosData.length} items loaded
+                  {/* Portfolio Section */}
+                  <motion.div
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true, amount: 0.3 }}
+                     transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                     <Section id="portfolio" className="py-20 bg-linear-to-b from-white to-neutral-50 dark:from-secondary-950 dark:to-secondary-900">
+                        <div className="container-custom">
+                           <SectionHeader
+                              title="Portfolio Terbaru"
+                              subtitle="Hasil Karya Kami"
+                              description="Beberapa project terbaik yang telah kami selesaikan untuk berbagai klien."
+                              align="center"
+                           />
+                           <div className="mt-16">
+                              {portfoliosData.length === 0 ? (
+                                 <SkeletonGrid count={3} />
+                              ) : (
+                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                    {portfoliosData.map((portfolio, index) => (
+                                       <PortfolioCard
+                                          key={portfolio.id}
+                                          title={portfolio.title}
+                                          image={portfolio.featured_image || portfolio.images?.[0] || 'https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1974'}
+                                          category={portfolio.category?.name || 'Web Development'}
+                                          slug={portfolio.slug}
+                                          index={index}
+                                       />
+                                    ))}
+                                 </div>
+                              )}
+                           </div>
+                           <div className="text-center mt-12">
+                              <Link
+                                 to="/portfolio"
+                                 className="inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-primary-600 to-primary-700 text-white font-black rounded-full hover:shadow-xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105"
+                              >
+                                 Lihat Semua Portfolio
+                                 <ArrowRight size={20} />
+                              </Link>
+                           </div>
                         </div>
-                        {portfoliosData.length > 0 && portfoliosData.slice(0, 1).map((p: any, i: number) => (
-                           <div key={i} className="text-xs text-yellow-700 mt-2">
-                              Sample: {p.title} | Category: {p.category} | Image: {p.featured_image ? 'Yes' : 'No'}
+                     </Section>
+                  </motion.div>
+
+                  {/* Team Section */}
+                  <motion.div
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true, amount: 0.3 }}
+                     transition={{ duration: 0.8, delay: 0.3 }}
+                  >
+                     <Section id="tim" className="py-20 bg-linear-to-br from-neutral-50 via-white to-neutral-50 dark:from-secondary-950 dark:via-secondary-900 dark:to-secondary-950">
+                        <div className="container-custom">
+                           <SectionHeader
+                              title="Tim Ahli Kami"
+                              subtitle="Profesional Berpengalaman"
+                              description="Dibackup oleh tim yang kompeten dan berpengalaman di bidangnya masing-masing."
+                              align="center"
+                           />
+                           <div className="mt-16">
+                              {teamData.length === 0 ? (
+                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                    {Array.from({ length: 4 }).map((_, i) => (
+                                       <div key={i} className="space-y-4">
+                                          <Skeleton className="h-64 w-full rounded-3xl" />
+                                          <Skeleton className="h-6 w-1/2 mx-auto" />
+                                       </div>
+                                    ))}
+                                 </div>
+                              ) : (
+                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                    {teamData.slice(0, 4).map((member, index) => (
+                                       <TeamCard
+                                          key={member.id}
+                                          name={member.name}
+                                          position={member.position}
+                                          image={member.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0ea5e9&color=fff&size=400`}
+                                          socialLinks={{
+                                             linkedin: member.linkedin_url,
+                                             github: member.github_url,
+                                             instagram: member.instagram_url
+                                          }}
+                                          index={index}
+                                       />
+                                    ))}
+                                 </div>
+                              )}
                            </div>
-                        ))}
-                     </div>
-                  )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                     {portfoliosData.length > 0 ? (
-                        portfoliosData.slice(0, 3).map((project: any, idx: number) => (
-                           <PortfolioCard
-                              key={project.uuid || project.id || project.slug || idx}
-                              title={project.title}
-                              category={project.category}
-                              image={project.featured_image}
-                              slug={project.slug}
-                              index={idx}
-                           />
-                        ))
-                     ) : (
-                        // Fallback jika belum ada data
-                        <>
-                           <PortfolioCard
-                              title="E-Commerce Website"
-                              category="E-Commerce"
-                              image="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070"
-                              slug="ecommerce-website"
-                              index={0}
-                           />
-                           <PortfolioCard
-                              title="Mobile Banking App"
-                              category="Mobile App"
-                              image="https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=2070"
-                              slug="mobile-banking-app"
-                              index={1}
-                           />
-                           <PortfolioCard
-                              title="Company Profile"
-                              category="Website"
-                              image="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070"
-                              slug="company-profile"
-                              index={2}
-                           />
-                        </>
-                     )}
-                  </div>
-
-                  {portfoliosData.length === 0 && (
-                     <div className="mt-8 text-center">
-                        <p className="text-gray-400">
-                           Portfolio data sedang dimuat atau belum tersedia.
-                        </p>
-                     </div>
-                  )}
-               </Section>
-
-               {/* Team Section - DINAMIS dari API */}
-               <Section>
-                  <SectionHeader
-                     subtitle="Tim Kami"
-                     title="Dibalik Karya-Karya Luar Biasa"
-                     description="Kami terdiri dari para profesional yang berdedikasi tinggi untuk kesuksesan digital Anda."
-                  />
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                     {teamData.length > 0 ? (
-                        teamData.slice(0, 4).map((member: any, idx: number) => {
-                           // Generate fallback avatar based on name safely
-                           const getInitials = (name: string) => {
-                              if (!name) return '??';
-                              return name
-                                 .split(' ')
-                                 .map(word => word ? word[0] : '')
-                                 .join('')
-                                 .toUpperCase()
-                                 .substring(0, 2);
-                           };
-
-                           return (
-                              <TeamCard
-                                 key={member.uuid || member.id || idx}
-                                 name={member.name || 'Team Member'}
-                                 position={member.position || 'Professional'}
-                                 bio={member.short_bio || member.bio || ''}
-                                 photoUrl={member.photo_url}
-                                 initials={getInitials(member.name)}
-                                 socialLinks={member.social || {}}
-                                 expertises={member.expertises || []}
-                                 index={idx}
-                              />
-                           );
-                        })
-                     ) : (
-                        // Fallback jika belum ada data
-                        <>
-                           <TeamCard
-                              name="John Doe"
-                              position="Web Developer"
-                              bio="Spesialis pengembangan website dengan pengalaman 5+ tahun"
-                              photoUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974"
-                              index={0}
-                           />
-                           <TeamCard
-                              name="Jane Smith"
-                              position="UI/UX Designer"
-                              bio="Desainer antarmuka dengan fokus pada user experience"
-                              photoUrl="https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=1974"
-                              index={1}
-                           />
-                           <TeamCard
-                              name="Robert Brown"
-                              position="SEO Specialist"
-                              bio="Ahli optimasi mesin pencari dengan track record proven"
-                              photoUrl="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974"
-                              index={2}
-                           />
-                           <TeamCard
-                              name="Sarah Wilson"
-                              position="Project Manager"
-                              bio="Manajer proyek dengan sertifikasi PMP dan 7+ tahun pengalaman"
-                              photoUrl="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070"
-                              index={3}
-                           />
-                        </>
-                     )}
-                  </div>
-
-                  {/* Show More Button if there are more team members */}
-                  {teamData.length > 4 && (
-                     <div className="mt-12 text-center">
-                        <Link to="/team" className="btn btn-secondary">
-                           Lihat Seluruh Tim
-                           <ArrowRight className="ml-2 w-4 h-4" />
-                        </Link>
-                     </div>
-                  )}
-               </Section>
-
-               {/* Blog Section - FIXED untuk database */}
-               <Section background="gray">
-                  <SectionHeader
-                     subtitle="Update Terbaru"
-                     title="Wawasan dari Blog Kami"
-                     description="Pelajari tips dan tren terbaru seputar transformasi digital untuk UMKM."
-                  />
-
-                  {debugMode && (
-                     <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
-                        <div className="text-green-600 text-sm font-medium mb-1">
-                           🔍 Blog Posts Debug: {postsData.length} items loaded
                         </div>
-                        {postsData.length > 0 && postsData.slice(0, 1).map((p: any, i: number) => (
-                           <div key={i} className="text-xs text-green-700 mt-2">
-                              Sample: {p.title} | Author: {p.author?.name || p.author_name} | Image: {p.featured_image ? 'Yes' : 'No'}
+                     </Section>
+                  </motion.div>
+
+                  {/* Blog Section */}
+                  <motion.div
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true, amount: 0.3 }}
+                     transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                     <Section id="blog" className="py-20 bg-linear-to-b from-white to-neutral-50 dark:from-secondary-950 dark:to-secondary-900">
+                        <div className="container-custom">
+                           <SectionHeader
+                              title="Artikel Terbaru"
+                              subtitle="Tips & Insight Digital"
+                              description="Kumpulan artikel bermanfaat seputar teknologi, pemasaran digital, dan pengembangan bisnis."
+                              align="center"
+                           />
+                           <div className="mt-16">
+                              {postsData.length === 0 ? (
+                                 <SkeletonGrid count={3} />
+                              ) : (
+                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                    {postsData.map((post, index) => (
+                                       <BlogCard
+                                          key={post.id}
+                                          post={{
+                                             id: post.id,
+                                             title: post.title,
+                                             slug: post.slug,
+                                             excerpt: post.excerpt || post.content?.substring(0, 150) + '...',
+                                             image_url: post.featured_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070',
+                                             category: post.category?.name || 'Digital',
+                                             author: post.author?.name || 'Admin',
+                                             published_at: post.published_at || post.created_at
+                                          }}
+                                          index={index}
+                                       />
+                                    ))}
+                                 </div>
+                              )}
                            </div>
-                        ))}
-                     </div>
-                  )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                     {postsData.length > 0 ? (
-                        postsData.slice(0, 3).map((post: any, idx: number) => (
-                           <BlogCard
-                              key={post.uuid || post.id || post.slug || idx}
-                              post={{
-                                 ...post,
-                                 author: post.author?.name || post.author_name || 'Admin',
-                                 image_url: post.featured_image,
-                                 category: post.category?.name || post.category || 'General'
-                              }}
-                              index={idx}
-                           />
-                        ))
-                     ) : (
-                        // Fallback jika belum ada data
-                        <>
-                           <BlogCard
-                              post={{
-                                 id: 101,
-                                 title: "Tips SEO untuk UMKM",
-                                 excerpt: "Pelajari strategi SEO dasar untuk meningkatkan ranking website bisnis Anda di Google",
-                                 image_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2070",
-                                 author: "Admin",
-                                 published_at: "2024-01-15",
-                                 slug: "tips-seo-umkm",
-                                 category: "Marketing"
-                              }}
-                              index={0}
-                           />
-                           <BlogCard
-                              post={{
-                                 id: 102,
-                                 title: "Desain Website Responsif",
-                                 excerpt: "Mengapa website responsive penting untuk bisnis di era mobile-first",
-                                 image_url: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1974",
-                                 author: "Admin",
-                                 published_at: "2024-01-10",
-                                 slug: "desain-website-responsif",
-                                 category: "Design"
-                              }}
-                              index={1}
-                           />
-                           <BlogCard
-                              post={{
-                                 id: 103,
-                                 title: "Strategi Digital Marketing",
-                                 excerpt: "Cara efektif memasarkan produk melalui platform digital untuk UMKM",
-                                 image_url: "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070",
-                                 author: "Admin",
-                                 published_at: "2024-01-05",
-                                 slug: "strategi-digital-marketing",
-                                 category: "Business"
-                              }}
-                              index={2}
-                           />
-                        </>
-                     )}
-                  </div>
-
-                  <div className="mt-16 text-center">
-                     <Link to="/blog" className="btn btn-secondary">
-                        Baca Artikel Lainnya
-                     </Link>
-                  </div>
-               </Section>
-
-               {/* Stats Section */}
-               <Section background="dark" className="relative overflow-hidden">
-                  {/* Background decoration for stats */}
-                     <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500 rounded-full blur-[150px]" />
-                        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary-500 rounded-full blur-[150px]" />
-                  </div>
-
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-                     {[
-                        { label: 'Proyek Selesai', value: 150, suffix: '+', icon: Award, color: 'from-blue-500/20 to-blue-600/20' },
-                        { label: 'Klien Puas', value: 120, suffix: '+', icon: Users, color: 'from-purple-500/20 to-purple-600/20' },
-                        { label: 'Tahun Pengalaman', value: 5, suffix: '+', icon: Code2, color: 'from-indigo-500/20 to-indigo-600/20' },
-                        { label: 'Partner UMKM', value: 80, suffix: '+', icon: ShieldCheck, color: 'from-teal-500/20 to-teal-600/20' },
-                     ].map((stat, idx) => (
-                        <motion.div
-                           key={idx}
-                           initial={{ opacity: 0, y: 30 }}
-                           whileInView={{ opacity: 1, y: 0 }}
-                           viewport={{ once: true }}
-                           transition={{ delay: idx * 0.1 }}
-                           whileHover={{ y: -10, transition: { duration: 0.2 } }}
-                           className={cn(
-                              "relative group p-8 glass-card bg-white/5 backdrop-blur-xl transition-all duration-500 overflow-hidden text-center",
-                              "hover:border-primary-500/30 hover:shadow-glow"
-                           )}
-                        >
-                           {/* Glow effect on hover */}
-                           <div className={cn(
-                              "absolute inset-0 bg-linear-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10",
-                              stat.color
-                           )} />
-
-                           <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-primary-400 mx-auto mb-6 border border-white/10 group-hover:scale-110 group-hover:bg-primary-500 group-hover:text-white transition-all duration-500">
-                              <stat.icon className="w-8 h-8" />
+                           <div className="text-center mt-12">
+                              <Link
+                                 to="/blog"
+                                 className="inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-primary-600 to-primary-700 text-white font-black rounded-full hover:shadow-xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105"
+                              >
+                                 Baca Semua Artikel
+                                 <ArrowRight size={20} />
+                              </Link>
                            </div>
-
-                           <div className="flex items-center justify-center gap-1 mb-2">
-                              <span className="text-4xl md:text-5xl font-black text-white tracking-tighter">
-                                 <AnimatedCounter value={stat.value} />
-                              </span>
-                              <span className="text-3xl font-black text-primary-500">{stat.suffix}</span>
-                           </div>
-                           <p className="text-secondary-400 font-extrabold uppercase tracking-[0.2em] text-[10px]">
-                              {stat.label}
-                           </p>
-
-                           {/* 3D Reflection Effect */}
-                           <div className="absolute top-0 -left-full w-full h-full bg-linear-to-r from-transparent via-white/5 to-transparent skew-x-[-20deg] group-hover:left-full transition-all duration-1000" />
-                        </motion.div>
-                     ))}
-                  </div>
-               </Section>
-
-               {/* CTA Section */}
-               <Section containerClassName="relative z-10" className="overflow-visible">
-                     <div className="bg-linear-to-br from-primary-600 to-accent-600 rounded-[50px] p-12 md:p-20 text-center relative overflow-hidden shadow-premium">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-secondary-400/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-400/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
-                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                     >
-                        <h2 className="text-4xl md:text-6xl font-display font-extrabold text-white mb-8 leading-tight">
-                           Siap Memulai Perjalanan <br /> Digital Bisnis Anda?
-                        </h2>
-                        <div className="flex flex-wrap justify-center gap-6">
-                           <a
-                              href={`https://wa.me/${settingsData?.contact_phone?.replace?.(/[^0-9]/g, '') || '6282124515302'}`}
-                              className="btn bg-white text-primary-700 hover:bg-secondary-100 px-10 h-14 text-lg font-bold"
-                           >
-                              Konsultasi via WhatsApp
-                           </a>
-                           <Link to="/contact" className="btn border-white/30 border text-white hover:bg-white/10 px-10 h-14 text-lg">
-                              Isi Form Kontak
-                           </Link>
                         </div>
-                     </motion.div>
+                     </Section>
+                  </motion.div>
+
+                  {/* Stats Section */}
+                  <Section background="dark" className="relative overflow-hidden py-20">
+                     <div className="container-custom">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                           {[
+                              { label: 'Proyek Selesai', value: 150, suffix: '+', icon: Award },
+                              { label: 'Klien Puas', value: 120, suffix: '+', icon: Users },
+                              { label: 'Tahun Pengalaman', value: 5, suffix: '+', icon: Code2 },
+                              { label: 'Partner UMKM', value: 80, suffix: '+', icon: ShieldCheck },
+                           ].map((stat, idx) => (
+                              <motion.div
+                                 key={idx}
+                                 initial={{ opacity: 0, y: 30 }}
+                                 whileInView={{ opacity: 1, y: 0 }}
+                                 viewport={{ once: true }}
+                                 transition={{ delay: idx * 0.1 }}
+                                 className="text-center p-8 bg-white/5 rounded-3xl backdrop-blur-sm border border-white/10"
+                              >
+                                 <div className="w-16 h-16 rounded-2xl bg-primary-500/20 flex items-center justify-center text-primary-400 mx-auto mb-6">
+                                    <stat.icon className="w-8 h-8" />
+                                 </div>
+                                 <div className="flex items-center justify-center gap-1 mb-2">
+                                    <span className="text-4xl md:text-5xl font-black text-white">
+                                       <AnimatedCounter value={stat.value} />
+                                    </span>
+                                    <span className="text-3xl font-black text-primary-500">{stat.suffix}</span>
+                                 </div>
+                                 <p className="text-gray-400 font-medium uppercase tracking-wider text-sm">
+                                    {stat.label}
+                                 </p>
+                              </motion.div>
+                           ))}
+                        </div>
+                     </div>
+                  </Section>
+
+                  {/* CTA Section */}
+                  <Section className="py-20">
+                     <div className="container-custom">
+                        <div className="relative overflow-hidden rounded-[48px] bg-linear-to-br from-primary-600 via-primary-700 to-primary-800 p-12 md:p-20">
+                           <div className="relative z-10 text-center">
+                              <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+                                 Siap Transformasi Digital Bisnis Anda?
+                              </h2>
+                              <p className="text-xl text-primary-100 mb-10 max-w-3xl mx-auto">
+                                 Konsultasikan kebutuhan digital bisnis Anda secara gratis dengan tim ahli kami.
+                              </p>
+                              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                 <button
+                                    onClick={() => {
+                                       const link = getWhatsAppLink(getConsultationMessage());
+                                       window.open(link, '_blank');
+                                    }}
+                                    className="px-10 py-5 bg-white text-primary-700 font-black rounded-full hover:shadow-2xl hover:scale-105 transition-all duration-500"
+                                 >
+                                    Konsultasi Gratis Sekarang
+                              </button>
+                              <Link
+                                 to="/portfolio"
+                                 className="px-10 py-5 bg-transparent border-2 border-white/30 text-white font-black rounded-full hover:bg-white/10 hover:border-white transition-all duration-500"
+                              >
+                                 Lihat Portfolio
+                              </Link>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                </Section>
             </>

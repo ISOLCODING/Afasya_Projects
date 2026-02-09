@@ -1,8 +1,8 @@
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useEffect } from 'react';
-import { ArrowRight, Check, Minus, Rocket, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Check, Minus, Rocket, ShieldCheck, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import ChatAssistantModal from './ChatAssistantModal';
 
 interface Package {
     id: number;
@@ -10,6 +10,7 @@ interface Package {
     price: string | number;
     description: string;
     included_features: string[];
+    excluded_features: string[];
     is_popular: boolean;
     delivery_days: number;
 }
@@ -20,10 +21,11 @@ interface ServiceEstimatorProps {
 }
 
 const ServiceEstimator: React.FC<ServiceEstimatorProps> = ({ packages, serviceName }) => {
-    const navigate = useNavigate();
+
     // Default to the middle package (usually Pro) or the first one
     const defaultPackage = packages.find(p => p.is_popular) || packages[1] || packages[0];
     const [selectedPkgId, setSelectedPkgId] = useState<number>(defaultPackage?.id);
+    const [isAssistantOpen, setIsAssistantOpen] = useState(false);
 
     const selectedPackage = packages.find(p => p.id === selectedPkgId) || defaultPackage;
 
@@ -57,8 +59,8 @@ const ServiceEstimator: React.FC<ServiceEstimatorProps> = ({ packages, serviceNa
     };
 
     const handleOrder = () => {
-        if (selectedPackage) {
-            navigate(`/checkout/${selectedPackage.id}`);
+        if (selectedPackage && serviceName) {
+            setIsAssistantOpen(true);
         }
     };
 
@@ -189,8 +191,10 @@ const ServiceEstimator: React.FC<ServiceEstimatorProps> = ({ packages, serviceNa
                                     {feature}
                                 </td>
                                 {packages.map(pkg => {
-                                    const hasFeature = pkg.included_features.includes(feature);
+                                    const isIncluded = Array.isArray(pkg.included_features) && pkg.included_features.includes(feature);
+                                    const isExcluded = Array.isArray(pkg.excluded_features) && pkg.excluded_features.includes(feature);
                                     const isSelected = selectedPkgId === pkg.id;
+
                                     return (
                                         <td 
                                             key={pkg.id} 
@@ -200,9 +204,13 @@ const ServiceEstimator: React.FC<ServiceEstimatorProps> = ({ packages, serviceNa
                                                 ${isSelected && idx === allFeatures.length - 1 ? 'rounded-b-2xl' : ''}
                                             `}
                                         >
-                                            {hasFeature ? (
+                                            {isIncluded ? (
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center mx-auto ${isSelected ? 'bg-primary-500 text-white shadow-glow' : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-500'}`}>
                                                     <Check size={16} strokeWidth={3} />
+                                                </div>
+                                            ) : isExcluded ? (
+                                                <div className="w-8 h-8 rounded-full flex items-center justify-center mx-auto bg-rose-100 text-rose-400 dark:bg-rose-500/10 dark:text-rose-500/40">
+                                                    <X size={16} />
                                                 </div>
                                             ) : (
                                                 <div className="w-8 h-8 rounded-full flex items-center justify-center mx-auto bg-secondary-100 text-secondary-400 dark:bg-white/5 dark:text-secondary-600">
@@ -224,6 +232,13 @@ const ServiceEstimator: React.FC<ServiceEstimatorProps> = ({ packages, serviceNa
                     Semua paket dilindungi garansi maintenance 30 hari & dukungan teknis prioritas.
                 </p>
             </div>
+
+            <ChatAssistantModal
+                isOpen={isAssistantOpen}
+                onClose={() => setIsAssistantOpen(false)}
+                serviceName={serviceName}
+                selectedPackage={selectedPackage}
+            />
         </div>
     );
 };

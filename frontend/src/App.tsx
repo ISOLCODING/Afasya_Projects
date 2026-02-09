@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import SupportChatWidget from '@/components/common/SupportChatWidget';
 import AppRoutes from './routes/AppRoutes';
 
 const queryClient = new QueryClient({
@@ -33,6 +34,8 @@ function App() {
                 },
               }}
             />
+            {/* Global Support Chat Widget */}
+            <SupportChatWidget />
           </BrowserRouter>
         </HelmetProvider>
       </ThemeProvider>

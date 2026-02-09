@@ -11,9 +11,10 @@ interface ServiceCardProps {
    image?: string;
    index: number;
    startingPrice?: number | string;
+   deliveryTime?: string;
 }
 
-const ServiceCard = ({ title, description, icon: Icon, slug, image, index, startingPrice }: ServiceCardProps) => {
+const ServiceCard = ({ title, description, icon: Icon, slug, image, index, startingPrice, deliveryTime }: ServiceCardProps) => {
    const x = useMotionValue(0);
    const y = useMotionValue(0);
 
@@ -55,14 +56,15 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index, start
             rotateX,
             transformStyle: "preserve-3d",
          }}
-         className="group relative bg-linear-to-br from-white to-primary-50 dark:from-primary-900 dark:to-primary-950 overflow-hidden rounded-[32px] border border-primary-100 dark:border-white/5 hover:border-primary-500/30 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-primary-500/20"
+         className="group relative bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl overflow-hidden rounded-[40px] border border-neutral-200/50 dark:border-white/10 hover:border-primary-500/50 transition-all duration-500 cursor-pointer hover:shadow-[0_20px_50px_rgba(8,112,184,0.1)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
       >
-         {/* Gradient Background */}
-         < div className="absolute inset-0 bg-linear-to-br from-primary-600/10 via-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+         {/* Premium Glow Effect on Hover */}
+         <div className="absolute inset-0 bg-linear-to-br from-primary-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+         <div className="absolute -inset-full bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer pointer-events-none" />
 
          <div
             style={{ transform: "translateZ(50px)" }}
-            className="relative z-10 p-8 flex flex-col h-full"
+            className="relative z-10 p-10 flex flex-col h-full"
          >
             <div className="w-16 h-16 bg-linear-to-br from-primary-500/10 to-secondary-500/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-primary-400 mb-8 border border-white/10 group-hover:bg-linear-to-br group-hover:from-primary-600 group-hover:to-secondary-600 group-hover:text-white group-hover:scale-110 transition-all duration-500 shadow-xl">
                <Icon className="w-8 h-8" />
@@ -74,23 +76,32 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index, start
             />
 
             <p
-               className="text-secondary-600 dark:text-neutral-400 text-sm leading-relaxed mb-6 grow"
+               className="text-secondary-600 dark:text-neutral-400 text-sm leading-relaxed mb-8 grow line-clamp-3"
                dangerouslySetInnerHTML={{ __html: description }}
             />
 
-            <div className="flex items-center gap-2 mb-8 p-3 rounded-2xl bg-white/5 border border-white/5 w-fit">
-               <span className="w-4 h-4 text-primary-500" />
-               <span className="text-xs text-secondary-500 uppercase tracking-widest font-bold">Mulai dari</span>
-               <span className="text-lg font-black text-secondary-900 dark:text-white">
-                  {startingPrice ? `Rp ${new Intl.NumberFormat('id-ID').format(Number(startingPrice))}` : 'Harga Kompetitif'}
-               </span>
+            <div className="flex flex-col gap-4 mb-10">
+               <div className="flex items-center justify-between p-4 rounded-[20px] bg-white/50 dark:bg-white/5 border border-primary-500/10 backdrop-blur-sm">
+                  <div className="flex flex-col">
+                     <span className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase tracking-widest font-bold mb-1">Mulai Dari</span>
+                     <span className="text-xl font-black text-secondary-900 dark:text-white">
+                        {startingPrice ? `Rp ${new Intl.NumberFormat('id-ID').format(Number(startingPrice))}` : 'Harga Kompetitif'}
+                     </span>
+                  </div>
+                  {deliveryTime && (
+                     <div className="text-right">
+                        <span className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase tracking-widest font-bold mb-1 block">Waktu</span>
+                        <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{deliveryTime}</span>
+                     </div>
+                  )}
+               </div>
             </div>
 
             <Link
                to={`/services/${slug}`}
-               className="inline-flex items-center gap-2 text-primary-400 font-bold text-sm tracking-wider uppercase group-hover:gap-4 transition-all"
+               className="inline-flex items-center gap-2 bg-secondary-900 dark:bg-white text-white dark:text-secondary-950 px-6 py-3 rounded-2xl font-bold text-sm tracking-wider uppercase group-hover:gap-4 transition-all w-fit shadow-lg shadow-black/10"
             >
-               Pelajari Lebih
+               Pelajari Detail
                <ArrowRight className="w-4 h-4" />
             </Link>
          </div>

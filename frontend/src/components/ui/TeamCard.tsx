@@ -46,16 +46,18 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
             )}
 
             {/* Overlay with Bio & Socials */}
-            <div className="absolute inset-0 bg-primary-950/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-center">
-               {bio && (
-                  <motion.p
-                     initial={{ y: 10, opacity: 0 }}
-                     whileInView={{ y: 0, opacity: 1 }}
-                     className="text-white text-sm mb-6 leading-relaxed line-clamp-4 font-medium"
-                  >
-                     {bio}
-                  </motion.p>
-               )}
+            <div className="absolute inset-0 bg-primary-950/40 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center p-6 text-center">
+               <div className="absolute inset-0 bg-linear-to-t from-primary-900 via-transparent to-transparent opacity-60" />
+               <div className="relative z-10 w-full">
+                  {bio && (
+                     <motion.p
+                        initial={{ y: 20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        className="text-white text-sm mb-6 leading-relaxed line-clamp-4 font-medium"
+                     >
+                        {bio}
+                     </motion.p>
+                  )}
 
                {expertises && expertises.length > 0 && (
                   <div className="flex flex-wrap justify-center gap-1 mb-6">
@@ -67,25 +69,26 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
                   </div>
                )}
 
-               <div className="flex items-center justify-center gap-3">
-                  {(availableSocials.length > 0 ? availableSocials : [
-                     { icon: Linkedin, url: '#' },
-                     { icon: Twitter, url: '#' },
-                     { icon: Github, url: '#' }
-                  ]).map((item, i) => (
-                     <motion.a
-                        key={i}
-                        href={item.url}
-                        target={item.url !== '#' ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        initial={{ y: 20, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="w-10 h-10 rounded-full bg-white text-primary-600 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all transform hover:scale-110 shadow-lg"
-                     >
-                        <item.icon className="w-5 h-5" />
-                     </motion.a>
-                  ))}
+                  <div className="flex items-center justify-center gap-3">
+                     {(availableSocials.length > 0 ? availableSocials : [
+                        { icon: Linkedin, url: '#' },
+                        { icon: Twitter, url: '#' },
+                        { icon: Github, url: '#' }
+                     ]).map((item, i) => (
+                        <motion.a
+                           key={i}
+                           href={item.url}
+                           target={item.url !== '#' ? "_blank" : undefined}
+                           rel="noopener noreferrer"
+                           initial={{ y: 20, opacity: 0 }}
+                           whileInView={{ y: 0, opacity: 1 }}
+                           transition={{ delay: i * 0.1 }}
+                           className="w-10 h-10 rounded-full bg-white text-primary-600 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all transform hover:scale-110 shadow-lg"
+                        >
+                           <item.icon className="w-5 h-5" />
+                        </motion.a>
+                     ))}
+                  </div>
                </div>
             </div>
          </div>

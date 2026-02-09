@@ -1,5 +1,6 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+import { AnimatePresence } from 'framer-motion';
 
 // Lazy load pages
 const Home = lazy(() => import('@/pages/Home'));
@@ -33,52 +34,57 @@ const Loading = () => (
 );
 
 const AppRoutes = () => {
+   const location = useLocation();
+
    return (
       <Suspense fallback={<Loading />}>
-         <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/services/:slug" element={<ServiceDetail />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogDetail />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/contact" element={<Contact />} />
+         <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+               {/* Public Routes */}
+               <Route path="/" element={<Home />} />
+               <Route path="/about" element={<About />} />
+               <Route path="/services" element={<Services />} />
+               <Route path="/services/:slug" element={<ServiceDetail />} />
+               <Route path="/portfolio" element={<Portfolio />} />
+               <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
+               <Route path="/blog" element={<Blog />} />
+               <Route path="/blog/:slug" element={<BlogDetail />} />
+               <Route path="/team" element={<Team />} />
+               <Route path="/contact" element={<Contact />} />
 
-            {/* Dynamic Pages - support multiple aliases */}
-            <Route path="/about-us" element={<Navigate to="/about" replace />} />
-            <Route path="/tentang-kami" element={<Navigate to="/about" replace />} />
-            <Route path="/layanan" element={<Navigate to="/services" replace />} />
-            <Route path="/portofolio" element={<Navigate to="/portfolio" replace />} />
-            <Route path="/posts" element={<Navigate to="/blog" replace />} />
-            <Route path="/artikel" element={<Navigate to="/blog" replace />} />
-            <Route path="/tim" element={<Navigate to="/team" replace />} />
-            <Route path="/kontak" element={<Navigate to="/contact" replace />} />
+               {/* Dynamic Pages - support multiple aliases */}
+               <Route path="/about-us" element={<Navigate to="/about" replace />} />
+               <Route path="/tentang-kami" element={<Navigate to="/about" replace />} />
+               <Route path="/layanan" element={<Navigate to="/services" replace />} />
+               <Route path="/portofolio" element={<Navigate to="/portfolio" replace />} />
+               <Route path="/posts" element={<Navigate to="/blog" replace />} />
+               <Route path="/artikel" element={<Navigate to="/blog" replace />} />
+               <Route path="/tim" element={<Navigate to="/team" replace />} />
+               <Route path="/kontak" element={<Navigate to="/contact" replace />} />
 
-            {/* Custom Dynamic Pages (CMS Pages) */}
-            <Route path="/pages/:slug" element={<DynamicPage />} />
+               {/* Custom Dynamic Pages (CMS Pages) */}
+               <Route path="/pages/:slug" element={<DynamicPage />} />
 
-            {/* Auth Routes */}
-            <Route path="/auth/login" element={<Login />} />
+               {/* Auth Routes */}
+               <Route path="/auth/login" element={<Login />} />
 
-            {/* Protected User Routes */}
-            <Route element={<ProtectedRoute />}>
-               <Route path="/checkout/:packageId" element={<Checkout />} />
-               <Route path="/dashboard" element={<UserDashboard />} />
-            </Route>
+               {/* Protected User Routes */}
+               <Route element={<ProtectedRoute />}>
+                  <Route path="/checkout/:packageId" element={<Checkout />} />
+                  <Route path="/dashboard" element={<UserDashboard />} />
+               </Route>
 
-            {/* Protected Admin Routes */}
-            <Route path="/admin" element={<ProtectedRoute />}>
-               <Route path="dashboard" element={<Dashboard />} />
-            </Route>
+               {/* Protected Admin Routes */}
+               <Route path="/admin" element={<ProtectedRoute />}>
+                  <Route path="dashboard" element={<Dashboard />} />
+               </Route>
 
-            {/* 404 & Catch-all */}
-            <Route path="/404" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/404" replace />} />
-         </Routes>
+               {/* 404 & Catch-all */}
+               <Route path="/404" element={<NotFound />} />
+               <Route path="/:slug" element={<DynamicPage />} />
+               <Route path="*" element={<Navigate to="/404" replace />} />
+            </Routes>
+         </AnimatePresence>
       </Suspense>
    );
 };
