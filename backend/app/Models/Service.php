@@ -23,6 +23,7 @@ class Service extends Model implements HasMedia
         'icon',
         'short_description',
         'full_description',
+        'sub_services',
         'price_min',
         'price_max',
         'currency',
@@ -40,6 +41,7 @@ class Service extends Model implements HasMedia
 
     protected $casts = [
         'full_description' => 'array',
+        'sub_services' => 'array',
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
         'price_min' => 'decimal:2',

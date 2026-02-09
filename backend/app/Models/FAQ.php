@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -34,6 +35,11 @@ class FAQ extends Model
         'helpful_yes' => 'integer',
         'helpful_no' => 'integer',
     ];
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
 
     public function service(): BelongsTo
     {

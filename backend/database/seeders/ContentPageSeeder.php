@@ -10,6 +10,11 @@ class ContentPageSeeder extends Seeder
 {
     public function run(): void
     {
+        // Truncate existing data to avoid duplicates
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        ContentPage::truncate();
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+
         $pages = [
             [
                 'title' => 'Home',
@@ -133,24 +138,34 @@ class ContentPageSeeder extends Seeder
                     [
                         'type' => 'hero',
                         'data' => [
-                            'title' => 'Layanan Digital Terintegrasi',
-                            'subtitle' => 'Pilih paket yang paling sesuai dengan target pertumbuhan bisnis Anda.',
-                            'cta_text' => 'Hubungi Kami',
+                            'title' => 'Solusi Digital yang <span class="text-primary-500">Elevate</span> Bisnis Anda',
+                            'subtitle' => 'Kami membantu brand membangun keberadaan digital yang kuat melalui desain premium dan teknologi mutakhir.',
+                            'cta_text' => 'Konsultasi Gratis',
                             'cta_link' => '/contact',
+                        ]
+                    ],
+                    [
+                        'type' => 'service_showcase',
+                        'data' => [
+                            'title' => 'PILIHAN JENIS JASA PEMBUATAN WEBSITE',
+                            'subtitle' => 'JASA WEBSITE',
+                            'description' => 'Dengan Proses Pembuatan Website yang terstruktur dan jelas. Afasya Projects menjamin kepuasan kamu atas Website yang kami buat.'
+                        ]
+                    ],
+                    [
+                        'type' => 'service_tabs',
+                        'data' => [
+                            'title' => 'Detail & Spesifikasi Layanan',
+                            'subtitle' => 'Analisis Mendalam',
+                            'description' => 'Pahami setiap aspek teknis dan visual yang kami berikan untuk setiap proyek Anda.'
                         ]
                     ],
                     [
                         'type' => 'services_grid',
                         'data' => [
-                            'title' => 'Layanan Unggulan Kami',
-                            'description' => 'Kami menyediakan solusi end-to-end untuk memastikan bisnis Anda sukses di dunia digital.',
+                            'title' => 'Katalog Lengkap Layanan',
+                            'description' => 'Pilih paket yang paling sesuai dengan target pertumbuhan bisnis Anda.',
                             'limit' => 12
-                        ]
-                    ],
-                    [
-                        'type' => 'rich_text',
-                        'data' => [
-                            'content' => '<div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 60px 0;"><h2>Kenapa Harus Kami?</h2><p>Dengan pengalaman menangani ratusan UMKM, kami mengerti kendala utama Anda: Budget dan Teknis. Kami menyederhanakan keduanya untuk Anda.</p></div>'
                         ]
                     ],
                     [
@@ -277,6 +292,48 @@ class ContentPageSeeder extends Seeder
                     'content' => $page['content'] ?? [],
                 ])
             );
+        }
+
+        // Add Child Pages for Services
+        $servicesPage = ContentPage::where('slug', 'services')->first();
+        if ($servicesPage) {
+            $childPages = [
+                [
+                    'title' => 'Web Profil & Company Profile',
+                    'slug' => 'web-profil-company-profile-child',
+                    'excerpt' => 'Solusi website profil perusahaan profesional.',
+                ],
+                [
+                    'title' => 'Toko Online & E-Commerce',
+                    'slug' => 'toko-online-e-commerce-child',
+                    'excerpt' => 'Bangun toko online Anda hari ini.',
+                ],
+                [
+                    'title' => 'Mobile App Development',
+                    'slug' => 'mobile-app-development-child',
+                    'excerpt' => 'Aplikasi mobile Android & iOS.',
+                ],
+            ];
+
+            foreach ($childPages as $idx => $child) {
+                ContentPage::updateOrCreate(
+                    ['slug' => $child['slug']],
+                    [
+                        'parent_id' => $servicesPage->id,
+                        'title' => $child['title'],
+                        'slug' => $child['slug'],
+                        'excerpt' => $child['excerpt'],
+                        'uuid' => (string) Str::uuid(),
+                        'is_published' => true,
+                        'published_at' => now(),
+                        'is_in_menu' => true,
+                        'menu_order' => $idx + 1,
+                        'page_type' => 'custom',
+                        'template' => 'default',
+                        'content' => [],
+                    ]
+                );
+            }
         }
     }
 }

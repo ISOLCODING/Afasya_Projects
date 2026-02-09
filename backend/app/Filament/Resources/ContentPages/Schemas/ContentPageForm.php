@@ -160,43 +160,91 @@ class ContentPageForm
                                     ])->columns(2),
                             ]),
 
-                        Tab::make('Settings & Hierarchy')
-                            ->icon('heroicon-o-cog')
+                        Tab::make('Navigation & Status')
+                            ->icon('heroicon-o-bars-3-center-left')
                             ->schema([
-                                Section::make()
+                                Section::make('Navbar Configuration')
+                                    ->description('Atur bagaimana halaman ini muncul di menu navigasi atas (Navbar).')
+                                    ->icon('heroicon-o-cursor-arrow-rays')
                                     ->schema([
+                                        Toggle::make('is_in_menu')
+                                            ->label('Tampilkan di Navbar?')
+                                            ->helperText('Jika diaktifkan, halaman ini akan muncul di menu utama.')
+                                            ->default(true)
+                                            ->live(),
+
                                         Select::make('parent_id')
+                                            ->label('Posisi Menu (Parent)')
+                                            ->placeholder('Menu Utama (Root)')
+                                            ->helperText('Pilih "Layanan" jika Anda ingin halaman ini menjadi sub-menu di bawah Layanan.')
                                             ->relationship('parent', 'title')
                                             ->searchable()
-                                            ->preload(),
-                                        Select::make('page_type')
+                                            ->preload()
+                                            ->visible(fn($get) => $get('is_in_menu')),
+
+                                        Select::make('menu_icon')
+                                            ->label('Icon Menu')
                                             ->options([
-                                                'custom' => 'Custom',
-                                                'service' => 'Service Related',
-                                                'portfolio' => 'Portfolio Related',
-                                                'blog' => 'Blog Related',
-                                                'legal' => 'Legal/Privacy',
+                                                'layout' => 'Layout / General',
+                                                'building-2' => 'Web Profil / Company',
+                                                'shopping-cart' => 'E-Commerce / Toko',
+                                                'smartphone' => 'Mobile / App',
+                                                'calendar-range' => 'Booking / Reservasi',
+                                                'search' => 'SEO / Marketing',
+                                                'database' => 'System / Database',
+                                                'shield' => 'Security / Keamanan',
+                                                'globe' => 'Cloud / Hosting',
+                                                'monitor' => 'Design / UI UX',
+                                                'code-2' => 'Development / Code',
+                                                'zap' => 'Interactive / Fast',
+                                                'star' => 'Featured / Highlight',
+                                            ])
+                                            ->searchable()
+                                            ->preload()
+                                            ->helperText('Pilih ikon yang paling menggambarkan halaman ini.')
+                                            ->visible(fn($get) => $get('is_in_menu')),
+
+                                        TextInput::make('menu_order')
+                                            ->label('Urutan Menu')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->helperText('Angka lebih kecil akan muncul lebih awal.')
+                                            ->visible(fn($get) => $get('is_in_menu')),
+                                    ])->columns(2),
+
+                                Section::make('Page Settings')
+                                    ->description('Konfigurasi tipe dan status publikasi halaman.')
+                                    ->icon('heroicon-o-cog-6-tooth')
+                                    ->schema([
+                                        Select::make('page_type')
+                                            ->label('Tipe Halaman')
+                                            ->options([
+                                                'custom' => 'Custom (Bebas)',
+                                                'service' => 'Terkait Layanan',
+                                                'portfolio' => 'Terkait Portfolio',
+                                                'blog' => 'Terkait Blog',
+                                                'legal' => 'Legal/Privacy Policy',
                                             ])
                                             ->required()
                                             ->default('custom'),
+                                        
                                         Select::make('template')
+                                            ->label('Template Layout')
                                             ->options([
-                                                'default' => 'Default',
-                                                'full-width' => 'Full Width',
-                                                'sidebar' => 'With Sidebar',
-                                                'landing' => 'Landing Page',
+                                                'default' => 'Default (Modern)',
+                                                'full-width' => 'Layar Penuh',
+                                                'landing' => 'Landing Page (Tanpa Header)',
                                             ])
                                             ->required()
                                             ->default('default'),
-                                        TextInput::make('menu_order')
-                                            ->numeric()
-                                            ->default(0),
+
                                         Toggle::make('is_published')
-                                            ->inline(false)
+                                            ->label('Publish Halaman')
+                                            ->helperText('Hanya halaman yang di-publish yang bisa diakses publik.')
                                             ->default(true),
-                                        Toggle::make('is_in_menu')
-                                            ->inline(false),
+
                                         DateTimePicker::make('published_at')
+                                            ->label('Tanggal Publish')
                                             ->default(now()),
                                     ])->columns(2),
                             ]),

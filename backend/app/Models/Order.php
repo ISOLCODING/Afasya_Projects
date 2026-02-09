@@ -15,6 +15,11 @@ class Order extends Model implements HasMedia
     protected $fillable = [
         'uuid',
         'user_id',
+        'client_name',
+        'client_email',
+        'client_whatsapp',
+        'company',
+        'note',
         'service_package_id',
         'amount',
         'status',

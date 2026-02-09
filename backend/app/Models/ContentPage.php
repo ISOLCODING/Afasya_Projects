@@ -29,6 +29,7 @@ class ContentPage extends Model implements HasMedia
         'og_image',
         'is_published',
         'is_in_menu',
+        'menu_icon',
         'menu_order',
         'view_count',
         'parent_id',

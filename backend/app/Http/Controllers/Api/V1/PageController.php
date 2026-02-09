@@ -11,7 +11,7 @@ class PageController extends ApiController
     {
         $pages = ContentPage::where('is_published', true)
             ->orderBy('menu_order')
-            ->get(['title', 'slug', 'excerpt', 'is_in_menu', 'menu_order']);
+            ->get(['id', 'parent_id', 'title', 'slug', 'excerpt', 'is_in_menu', 'menu_icon', 'menu_order']);
 
         return $this->success($pages);
     }

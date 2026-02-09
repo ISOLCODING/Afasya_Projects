@@ -38,54 +38,9 @@ class PaymentAndPackageDummySeeder extends Seeder
             );
         }
 
-        // 2. Create Service Packages for all services
-        $services = Service::all();
+        // 2. Service Packages are now handled in ServiceSeeder.php with detailed data.
+        // We only trigger a save here if we need to ensure any observers or price calculations are fresh, 
+        // though ServiceSeeder already handles this.
 
-        foreach ($services as $service) {
-            // Clear existing packages to avoid duplicates if running multiple times
-            $service->packages()->delete();
-
-            // Basic Package
-            ServicePackage::create([
-                'service_id' => $service->id,
-                'package_name' => 'Starter / Basic',
-                'price' => rand(1500000, 3000000),
-                'description' => 'Solusi hemat untuk kebutuhan standard.',
-                'delivery_days' => 7,
-                'is_popular' => false,
-                'display_order' => 1,
-                'included_features' => ['Fitur Dasar', '1x Revisi', 'Dukungan Standar'],
-                'excluded_features' => ['Fitur Premium', 'Custom Design', 'Optimasi Lanjut'],
-            ]);
-
-            // Pro Package
-            ServicePackage::create([
-                'service_id' => $service->id,
-                'package_name' => 'Business / Pro',
-                'price' => rand(5000000, 10000000),
-                'description' => 'Pilihan favorit untuk hasil maksimal.',
-                'delivery_days' => 14,
-                'is_popular' => true,
-                'display_order' => 2,
-                'included_features' => ['Semua Fitur Basic', 'Custom Design', 'Optimasi SEO', '3x Revisi', 'Prioritas Dukungan'],
-                'excluded_features' => ['Fitur Enterprise', 'Dedicated Manager'],
-            ]);
-
-            // Enterprise Package
-            ServicePackage::create([
-                'service_id' => $service->id,
-                'package_name' => 'Advanced / Enterprise',
-                'price' => rand(15000000, 30000000),
-                'description' => 'Solusi kustom penuh untuk skala besar.',
-                'delivery_days' => 30,
-                'is_popular' => false,
-                'display_order' => 3,
-                'included_features' => ['Semua Fitur Pro', 'Dedicated Account Manager', 'Keamanan Lanjut', 'Revisi Sepuasnya', 'Backup Berkala'],
-                'excluded_features' => [],
-            ]);
-
-            // Save the service to trigger the 'booted' logic that updates price_min/price_max
-            $service->save();
-        }
     }
 }

@@ -49,13 +49,24 @@ class OrdersTable
                     ->requiresConfirmation()
                     ->action(function (\App\Models\Order $record) {
                         $record->update(['status' => 'confirmed']);
+
+                        \App\Models\Project::create([
+                            'user_id' => $record->user_id,
+                            'order_id' => $record->id,
+                            'service_id' => $record->servicePackage->service_id,
+                            'service_package_id' => $record->service_package_id,
+                            'status' => 'planning',
+                            'name' => 'Project: ' . ($record->servicePackage->service->name ?? 'Service') . ' - ' . ($record->user->name ?? 'Client'),
+                        ]);
+
+                        // Keep UserPackage for compatibility if needed, but the user asked for Project
                         \App\Models\UserPackage::create([
                             'user_id' => $record->user_id,
                             'service_package_id' => $record->service_package_id,
                             'order_id' => $record->id,
                             'status' => 'active',
                             'started_at' => now(),
-                            'expired_at' => null, // Customize based on package logic if needed
+                            'expired_at' => null,
                         ]);
                     })
                     ->successNotificationTitle('Order confirmed and package activated'),

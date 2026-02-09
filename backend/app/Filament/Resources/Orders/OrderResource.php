@@ -22,7 +22,7 @@ class OrderResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return OrderForm::configure($schema);
+        return $schema->components(OrderForm::schema());
     }
 
     public static function table(Table $table): Table

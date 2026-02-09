@@ -33,7 +33,7 @@ class SiteSettingSeeder extends Seeder
             ],
             [
                 'key' => 'contact_phone',
-                'value' => '+62 821-2451-5302',
+                'value' => '081412307340',
                 'type' => 'string',
                 'group_name' => 'contact',
                 'is_public' => true,

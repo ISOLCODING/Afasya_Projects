@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V1\PaymentMethodController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\UserDashboardController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\SupportFaqController;
 
 Route::prefix('v1')->group(function () {
     // Auth Routes
@@ -42,6 +43,7 @@ Route::prefix('v1')->group(function () {
     // Payments & Orders
     Route::get('/payment-methods', [PaymentMethodController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store']);
+    Route::post('/assistant/orders', [OrderController::class, 'storeFromAssistant']);
     Route::post('/orders/{uuid}/payment-proof', [OrderController::class, 'uploadProof']);
 
     // Portfolios
@@ -77,4 +79,12 @@ Route::prefix('v1')->group(function () {
     // Blog/Posts
     Route::get('/posts', [PostController::class, 'index']);
     Route::get('/posts/{post:slug}', [PostController::class, 'show']);
+
+    // Support Chat FAQs
+    Route::post('/support/chat', [SupportFaqController::class, 'chat']);
+    Route::get('/support/faqs', [SupportFaqController::class, 'index']);
+    Route::get('/support/faqs/categories', [SupportFaqController::class, 'categories']);
+    Route::get('/support/faqs/category/{category}', [SupportFaqController::class, 'byCategory']);
+    Route::post('/support/faqs/{uuid}/view', [SupportFaqController::class, 'incrementView']);
+    Route::post('/support/faqs/{uuid}/helpful', [SupportFaqController::class, 'markHelpful']);
 });

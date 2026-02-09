@@ -19,21 +19,29 @@ class ContentPagesTable
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label('Judul Halaman')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('parent.title')
+                    ->label('Parent (Induk)')
+                    ->placeholder('Menu Utama')
                     ->sortable(),
                 TextColumn::make('slug')
                     ->searchable()
-                    ->sortable(),
-                TextColumn::make('page_type')
-                    ->badge(),
-                TextColumn::make('template')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('page_type')
+                    ->label('Tipe')
+                    ->badge(),
                 IconColumn::make('is_published')
                     ->boolean()
                     ->label('Published'),
                 IconColumn::make('is_in_menu')
                     ->boolean()
-                    ->label('In Menu'),
+                    ->label('Navbar'),
+                TextColumn::make('menu_icon')
+                    ->label('Icon')
+                    ->toggleable(),
                 TextColumn::make('menu_order')
                     ->numeric()
                     ->sortable()
