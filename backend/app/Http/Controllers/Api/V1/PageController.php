@@ -29,6 +29,7 @@ class PageController extends ApiController
             'slug' => $page->slug,
             'content' => $page->content,
             'excerpt' => $page->excerpt,
+            'hero_image' => $page->getFirstMediaUrl('page_images'),
             'meta' => [
                 'title' => $page->meta_title,
                 'description' => $page->meta_description,
