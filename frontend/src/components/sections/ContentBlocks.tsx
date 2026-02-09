@@ -159,7 +159,7 @@ const ImageTextBlock = ({ data }: { data: any }) => (
 const ServicesGridBlock = ({ data }: { data: any }) => {
    const { data: services } = useQuery({
       queryKey: ['services-block', data.limit],
-      queryFn: () => getServices().then(res => res.data.slice(0, data.limit || 6)),
+      queryFn: () => getServices({ limit: data.limit || 6 }).then(res => res.data),
    });
 
    return (
@@ -191,7 +191,7 @@ const ServicesGridBlock = ({ data }: { data: any }) => {
 const PortfolioGridBlock = ({ data }: { data: any }) => {
    const { data: portfolios } = useQuery({
       queryKey: ['portfolio-block', data.limit],
-      queryFn: () => getPortfolios().then(res => res.data.slice(0, data.limit || 6)),
+      queryFn: () => getPortfolios({ limit: data.limit || 6 }).then(res => res.data),
    });
 
    return (
@@ -222,7 +222,7 @@ const PortfolioGridBlock = ({ data }: { data: any }) => {
 const TeamGridBlock = ({ data }: { data: any }) => {
    const { data: team } = useQuery({
       queryKey: ['team-block', data.limit],
-      queryFn: () => getTeam().then(res => res.data.slice(0, data.limit || 4)),
+      queryFn: () => getTeam({ limit: data.limit || 4 }).then(res => res.data),
    });
 
    return (
@@ -284,7 +284,7 @@ const TimelineBlock = ({ data }: { data: any }) => (
 const TeamFlipGridBlock = ({ data }: { data: any }) => {
    const { data: team } = useQuery({
       queryKey: ['team-flip-block', data.limit],
-      queryFn: () => getTeam().then(res => res.data.slice(0, data.limit || 4)),
+      queryFn: () => getTeam({ limit: data.limit || 4 }).then(res => res.data),
    });
 
    return (
@@ -432,6 +432,108 @@ const ServiceTabsBlock = ({ data }: { data: any }) => {
    );
 };
 
+const FeatureGridBlock = ({ data }: { data: any }) => (
+   <Section>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+         {/* Left Main Image - 8 columns */}
+         <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-8 rounded-[32px] overflow-hidden group relative aspect-16/10 lg:aspect-auto"
+         >
+            <img
+               src={getStorageUrl(data.main_image)}
+               alt="Brand Experience"
+               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex flex-col justify-end p-8 md:p-12">
+               <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-4">{data.title}</h2>
+            </div>
+         </motion.div>
+
+         {/* Right Cards Area - 4 columns */}
+         <div className="lg:col-span-4 flex flex-col gap-6">
+            {/* Top Description Card */}
+            <motion.div
+               initial={{ opacity: 0, x: 20 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               transition={{ delay: 0.2 }}
+               className="flex-1 bg-white dark:bg-neutral-900 rounded-[32px] p-8 flex flex-col justify-center border border-neutral-100 dark:border-white/5"
+            >
+               <p className="text-lg text-secondary-600 dark:text-secondary-300 leading-relaxed italic">
+                  "{data.description}"
+               </p>
+            </motion.div>
+
+            {/* Bottom Dark Card */}
+            <motion.div
+               initial={{ opacity: 0, x: 20 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               transition={{ delay: 0.3 }}
+               className="flex-1 bg-secondary-900 rounded-[32px] p-8 relative overflow-hidden group border border-white/5"
+            >
+               <div className="absolute top-0 right-0 p-4">
+                  <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                     <ArrowRight className="text-white w-6 h-6 -rotate-45" />
+                  </div>
+               </div>
+               <div className="h-full flex flex-col justify-end">
+                  <h3 className="text-2xl font-bold text-white mb-4 leading-tight">{data.card_title}</h3>
+                  <p className="text-secondary-400 text-sm leading-relaxed mb-6">
+                     {data.card_description}
+                  </p>
+                  <Link to={data.card_link || "#"} className="btn btn-primary h-12 text-sm w-fit rounded-xl">
+                     Discover more
+                  </Link>
+               </div>
+               {/* Decorative background logo/icon */}
+               <div className="absolute -bottom-10 -right-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                  <img src="/logo-icon-white.svg" className="w-40 h-40 filter invert brightness-0" alt="" />
+               </div>
+            </motion.div>
+         </div>
+      </div>
+   </Section>
+);
+
+const StatsDarkBlock = ({ data }: { data: any }) => (
+   <Section background="dark">
+      <div className="bg-secondary-900/50 backdrop-blur-xl border border-white/5 rounded-[40px] p-12 md:p-20 relative overflow-hidden group">
+         <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
+
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20 relative z-10">
+            <div>
+               <h2 className="text-3xl md:text-5xl font-display font-extrabold text-white mb-6 leading-tight">
+                  {data.title}
+               </h2>
+               <p className="text-secondary-400 text-lg max-w-xl">
+                  {data.description}
+               </p>
+            </div>
+         </div>
+
+         <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
+            {data.items?.map((stat: any, idx: number) => (
+               <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="flex flex-col gap-2"
+               >
+                  <span className="text-secondary-500 text-sm font-semibold uppercase tracking-wider">{stat.label}</span>
+                  <span className="text-4xl md:text-6xl font-display font-black text-white">{stat.value}</span>
+               </motion.div>
+            ))}
+         </div>
+      </div>
+   </Section>
+);
+
 const ContentBlocks = ({ blocks }: { blocks: any[] }) => {
    if (!blocks || !Array.isArray(blocks)) return null;
 
@@ -469,6 +571,10 @@ const ContentBlocks = ({ blocks }: { blocks: any[] }) => {
                   return <ServiceShowcaseBlock key={index} data={block.data} />;
                case 'service_tabs':
                   return <ServiceTabsBlock key={index} data={block.data} />;
+               case 'feature_grid':
+                  return <FeatureGridBlock key={index} data={block.data} />;
+               case 'stats_dark':
+                  return <StatsDarkBlock key={index} data={block.data} />;
                default:
                   return null;
             }

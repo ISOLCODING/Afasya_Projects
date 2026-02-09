@@ -92,26 +92,42 @@ class ContentPageSeeder extends Seeder
                     [
                         'type' => 'hero',
                         'data' => [
-                            'title' => 'Inovasi Digital untuk Masa Depan UMKM',
-                            'subtitle' => 'Afasya Projects berkomitmen menjadi partner transformasi digital nomor 1 bagi pelaku usaha menengah ke bawah di Indonesia.',
+                            'title' => 'Membangun Masa Depan <span class="text-primary-500">Digital</span> Bersama Afasya',
+                            'subtitle' => 'PT Afasya Digital Solution adalah mitra transformasi digital terpercaya yang berdedikasi membangun ekosistem bisnis yang cerdas melalui solusi teknologi inovatif.',
                             'cta_text' => 'Lihat Portfolio',
                             'cta_link' => '/portfolio',
-                            'image' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200'
+                            'image' => 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200'
                         ]
                     ],
                     [
-                        'type' => 'image_text',
+                        'type' => 'feature_grid',
                         'data' => [
-                            'title' => 'Visi & Misi Kami',
-                            'content' => '<h3>Membangun Ekosistem Digital</h3><p>Kami percaya bahwa setiap bisnis, sekecil apapun, berhak memiliki identitas digital yang profesional. Kami hadir untuk menjembatani kesenjangan teknologi dengan solusi yang terjangkau namun berkualitas tinggi.</p>',
-                            'image' => 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800',
-                            'image_position' => 'left'
+                            'main_image' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200',
+                            'title' => 'Empowering Businesses Through Innovation',
+                            'description' => 'Kami percaya bahwa teknologi harus menjadi enabler, bukan penghalang. Afasya hadir untuk memastikan setiap UMKM memiliki akses ke infrastruktur digital kelas dunia.',
+                            'card_title' => 'Ratusan Solusi Digital di Afasya.id',
+                            'card_description' => 'Menyediakan alat yang efektif untuk meningkatkan alur kerja, meningkatkan efisiensi, dan mendorong pertumbuhan bisnis Anda.',
+                            'card_link' => '/services'
                         ]
                     ],
                     [
-                        'type' => 'team_grid',
+                        'type' => 'stats_dark',
+                        'data' => [
+                            'title' => 'Pencapaian Kami dalam Angka',
+                            'description' => 'Dedikasi kami selama bertahun-tahun tercermin dalam setiap milestone yang kami capai bersama klien.',
+                            'items' => [
+                                ['label' => 'Mitra UMKM', 'value' => '300+'],
+                                ['label' => 'Proyek Selesai', 'value' => '800+'],
+                                ['label' => 'Kepuasan Klien', 'value' => '99%'],
+                                ['label' => 'Penghargaan', 'value' => '10+'],
+                            ]
+                        ]
+                    ],
+                    [
+                        'type' => 'team_flip_grid',
                         'data' => [
                             'title' => 'Berkenalan dengan Tim Kami',
+                            'description' => 'Talenta terbaik yang siap mendampingi kesuksesan digital bisnis Anda.',
                             'limit' => 8
                         ]
                     ],

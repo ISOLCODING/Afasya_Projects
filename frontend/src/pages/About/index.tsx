@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import PageLayout from '@/components/layout/PageLayout';
-import Section from '@/components/layout/Section';
 import Hero from '@/components/sections/Hero';
-import SectionHeader from '@/components/ui/SectionHeader';
-import InteractiveTimeline from '@/components/ui/InteractiveTimeline';
-import FlipCard from '@/components/ui/FlipCard';
 import ContentBlocks from '@/components/sections/ContentBlocks';
 import { getPage, getTeam } from '@/lib/api';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { getStorageUrl } from '@/lib/utils';
 
 const About = () => {
    const { data: pageResponse, isLoading: pageLoading } = useQuery({
@@ -41,120 +36,96 @@ const About = () => {
       { year: '2024', title: 'Inovasi AI', description: 'Mengintegrasikan teknologi AI ke dalam solusi-solusi digital untuk efisiensi bisnis klien.' },
    ];
 
+   const defaultBlocks = [
+      {
+         type: 'features_grid',
+         data: {
+            subtitle: 'Mengapa Memilih Kami',
+            title: 'Keunggulan PT Afasya Digital Solution',
+            description: 'Kami menggabungkan keahlian teknis dengan pemahaman bisnis yang mendalam untuk memberikan hasil terbaik.',
+            items: [
+               {
+                  icon: 'zap',
+                  title: 'Eksekusi Cepat',
+                  description: 'Proses pengembangan yang tangkas (Agile) memastikan ide Anda terealisasi dalam waktu singkat tanpa mengurangi kualitas.'
+               },
+               {
+                  icon: 'shield',
+                  title: 'Kualitas Terjamin',
+                  description: 'Standar pengujian yang ketat untuk memastikan aplikasi Anda bebas bug, aman, dan berperforma tinggi.'
+               },
+               {
+                  icon: 'users',
+                  title: 'Berfokus pada Klien',
+                  description: 'Kami mendengarkan dan berkolaborasi erat dengan Anda untuk menciptakan solusi yang benar-benar menjawab masalah bisnis.'
+               },
+               {
+                  icon: 'rocket',
+                  title: 'Teknologi Mutakhir',
+                  description: 'Memanfaatkan stack teknologi terbaru seperti AI, Cloud, dan modern web framework untuk masa depan bisnis Anda.'
+               }
+            ]
+         }
+      },
+      {
+         type: 'stats_showcase',
+         data: {
+            items: [
+               { value: '150+', label: 'Proyek Selesai' },
+               { value: '98%', label: 'Kepuasan Klien' },
+               { value: '50+', label: 'Mitra UMKM' },
+               { value: '5+', label: 'Tahun Pengalaman' }
+            ]
+         }
+      },
+      {
+         type: 'culture_grid',
+         data: {
+            subtitle: 'Budaya & Nilai',
+            title: 'Bagaimana Kami Bekerja',
+            description: 'Nilai-nilai inti yang mendasari setiap baris kode yang kami tulis dan setiap keputusan yang kami ambil.',
+            items: [
+               {
+                  title: 'Inovasi Berkelanjutan',
+                  description: 'Kami tidak pernah berhenti belajar. Setiap tantangan baru adalah kesempatan untuk berinovasi dan melampaui batas.',
+                  image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000'
+               },
+               {
+                  title: 'Integritas & Transparansi',
+                  description: 'Kepercayaan adalah fondasi kami. Kami menjunjung tinggi kejujuran dalam komunikasi dan proses kerja.',
+                  image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000'
+               }
+            ]
+         }
+      },
+      {
+         type: 'timeline',
+         data: {
+            title: 'Milestone & Sejarah',
+            description: 'Bagaimana kami tumbuh dan berkembang bersama para klien kami dari tahun ke tahun.',
+            items: history
+         }
+      },
+      {
+         type: 'team_flip_grid',
+         data: {
+            title: 'Para Kreator di Balik Layar',
+            description: 'Tim kami siap menjawab tantangan digital Anda dengan dedikasi penuh.',
+            limit: 4
+         }
+      }
+   ];
+
    return (
       <PageLayout>
          {/* Custom Hero for About Page */}
          <Hero
             title="Tentang Kami"
-            description="Kami adalah tim kreatif yang berdedikasi untuk membangun masa depan digital Anda dengan solusi inovatif."
+            description="PT Afasya Digital Solution adalah mitra transformasi digital terpercaya yang berdedikasi membangun masa depan bisnis Anda melalui solusi inovatif."
             image="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070"
          />
 
-         {/* Jika ada content blocks dari CMS, tampilkan selebihnya */}
-         {pageData?.content && pageData.content.length > 0 ? (
-            <ContentBlocks blocks={pageData.content} />
-         ) : (
-            <>
-               {/* Vision & Mission */}
-               <Section>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                     <div>
-                        <SectionHeader
-                           align="left"
-                           subtitle="Visi & Misi"
-                           title="Membangun Ekosistem Digital UMKM yang Tangguh"
-                           description="Kami percaya bahwa setiap bisnis, sekecil apapun, berhak memiliki akses ke teknologi digital kelas dunia."
-                        />
-                        <div className="space-y-6">
-                              <div className="flex gap-4 p-6 glass-card bg-primary-50/50 dark:bg-secondary-800/30 border border-primary-100 dark:border-white/5">
-                              <div className="text-2xl">🎯</div>
-                              <div>
-                                    <h4 className="font-bold text-secondary-900 dark:text-white mb-1">Visi Kami</h4>
-                                    <p className="text-sm text-secondary-600 dark:text-neutral-300 italic">Menjadi agensi digital nomor satu dalam pemberdayaan teknologi untuk UMKM di Indonesia.</p>
-                              </div>
-                           </div>
-                              <div className="flex gap-4 p-6 glass-card bg-secondary-50/50 dark:bg-secondary-900/40 border border-secondary-100 dark:border-white/5">
-                              <div className="text-2xl">🚀</div>
-                              <div>
-                                    <h4 className="font-bold text-secondary-900 dark:text-white mb-1">Misi Kami</h4>
-                                    <p className="text-sm text-secondary-600 dark:text-neutral-300">Memberikan solusi digital yang terjangkau, efektif, dan berkelanjutan bagi pertumbuhan bisnis.</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="relative">
-                        <img
-                           src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000"
-                           alt="Collaboration"
-                           className="rounded-[40px] shadow-2xl"
-                        />
-                           <div className="absolute -bottom-8 -left-8 glass-card bg-white/90 dark:bg-secondary-900/90 p-8 rounded-[30px] shadow-2xl border border-secondary-100 dark:border-white/10 max-w-xs">
-                              <p className="text-4xl font-black text-primary-600 dark:text-primary-400 mb-1">98%</p>
-                              <p className="text-xs font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-widest leading-tight">Kepuasan Klien Terhadap Hasil Kerja Kami</p>
-                        </div>
-                     </div>
-                  </div>
-               </Section>
-
-               {/* Timeline Section */}
-               <Section background="dark">
-                  <SectionHeader
-                     light
-                     subtitle="Perjalanan Kami"
-                     title="Milestone & Sejarah"
-                     description="Bagaimana kami tumbuh dan berkembang bersama para klien kami dari tahun ke tahun."
-                  />
-                  <InteractiveTimeline items={history} />
-               </Section>
-
-               {/* Team Section with FlipCards */}
-               <Section>
-                  <SectionHeader
-                     subtitle="Tim Ahli"
-                     title="Para Kreator di Balik Layar"
-                     description="Punya pertanyaan? Tim kami siap menjawab tantangan digital Anda."
-                  />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                     {teamData.length > 0 ? (
-                        teamData.map((member: any, idx: number) => (
-                           <FlipCard
-                              key={idx}
-                              name={member.name}
-                              position={member.position}
-                              photoUrl={getStorageUrl(member.photo_url || member.profile_image)}
-                              bio={member.short_bio || member.bio || ''}
-                              socialLinks={member.social || {}}
-                           />
-                        ))
-                     ) : (
-                        // Fallback Team
-                        <>
-                           <FlipCard
-                              name="Faishal Afasya"
-                              position="Lead Developer"
-                              bio="Expert in React & Laravel with 5+ years experience building scalable web applications."
-                           />
-                           <FlipCard
-                              name="Sarah Jane"
-                              position="UI/UX Designer"
-                              bio="Creative mind focused on clean, modern, and user-centric design experiences."
-                           />
-                           <FlipCard
-                              name="Mike Wazowski"
-                              position="SEO Specialist"
-                              bio="Helping businesses reach the top page of Google with data-driven strategies."
-                           />
-                           <FlipCard
-                              name="Robert Downey"
-                              position="Project Manager"
-                              bio="Ensuring every project is delivered on time with the highest quality standards."
-                           />
-                        </>
-                     )}
-                  </div>
-               </Section>
-            </>
-         )}
+         <ContentBlocks blocks={pageData?.content && pageData.content.length > 0 ? pageData.content : defaultBlocks} />
       </PageLayout>
    );
 };

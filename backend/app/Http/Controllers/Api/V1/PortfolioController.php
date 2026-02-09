@@ -21,7 +21,14 @@ class PortfolioController extends ApiController
             $query->where('is_featured', true);
         }
 
-        $portfolios = $query->orderBy('published_at', 'desc')->get();
+        $limit = $request->query('limit');
+        $query->orderBy('published_at', 'desc');
+
+        if ($limit) {
+            $portfolios = $query->limit($limit)->get();
+        } else {
+            $portfolios = $query->get();
+        }
 
         return $this->success(PortfolioResource::collection($portfolios));
     }

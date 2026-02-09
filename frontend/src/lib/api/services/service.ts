@@ -1,9 +1,9 @@
 // src/lib/api/services/service.ts
 import apiClient from '../client';
 
-export const getServices = async () => {
+export const getServices = async (params: any = {}) => {
   try {
-    const response = await apiClient.get('/services');
+    const response = await apiClient.get('/services', { params });
     const data = response.data;
     return {
       success: data.status === 'success',

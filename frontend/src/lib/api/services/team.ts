@@ -1,9 +1,9 @@
 // src/lib/api/services/team.ts
 import apiClient from '../client';
 
-export const getTeam = async () => {
+export const getTeam = async (params: any = {}) => {
   try {
-    const response = await apiClient.get('/team');
+    const response = await apiClient.get('/team', { params });
     const data = response.data;
     return {
       success: data.status === 'success',

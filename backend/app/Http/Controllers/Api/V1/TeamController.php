@@ -10,10 +10,17 @@ class TeamController extends ApiController
 {
     public function index(): JsonResponse
     {
-        $team = Team::where('is_active', true)
+        $limit = request('limit');
+
+        $query = Team::where('is_active', true)
             ->with('expertises')
-            ->orderBy('display_order')
-            ->get();
+            ->orderBy('display_order');
+
+        if ($limit) {
+            $team = $query->limit($limit)->get();
+        } else {
+            $team = $query->get();
+        }
 
         return $this->success(TeamResource::collection($team));
     }

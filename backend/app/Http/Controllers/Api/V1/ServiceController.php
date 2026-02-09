@@ -10,9 +10,15 @@ class ServiceController extends ApiController
 {
     public function index(): JsonResponse
     {
-        $services = Service::where('is_active', true)
-            ->orderBy('display_order')
-            ->get();
+        $limit = request('limit');
+        $query = Service::where('is_active', true)
+            ->orderBy('display_order');
+
+        if ($limit) {
+            $query->limit($limit);
+        }
+
+        $services = $query->get();
 
         return $this->success(ServiceResource::collection($services));
     }
