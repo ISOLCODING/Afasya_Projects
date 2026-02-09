@@ -81,7 +81,7 @@ class ContentPageSeeder extends Seeder
                 ],
                 'page_type' => 'home',
                 'template' => 'home',
-                'is_in_menu' => false,
+                'is_in_menu' => true,
                 'menu_order' => 0,
             ],
             [

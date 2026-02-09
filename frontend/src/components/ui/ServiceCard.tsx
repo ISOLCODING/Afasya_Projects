@@ -6,7 +6,7 @@ import React from 'react';
 interface ServiceCardProps {
    title: string;
    description: string;
-   icon: LucideIcon;
+   icon?: LucideIcon;
    slug: string;
    image?: string;
    index: number;
@@ -66,9 +66,13 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index, start
             style={{ transform: "translateZ(50px)" }}
             className="relative z-10 p-10 flex flex-col h-full"
          >
-            <div className="w-16 h-16 bg-linear-to-br from-primary-500/10 to-secondary-500/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-primary-400 mb-8 border border-white/10 group-hover:bg-linear-to-br group-hover:from-primary-600 group-hover:to-secondary-600 group-hover:text-white group-hover:scale-110 transition-all duration-500 shadow-xl">
-               <Icon className="w-8 h-8" />
-            </div>
+            {Icon ? (
+               <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-primary-500/20 to-secondary-500/20 backdrop-blur-sm flex items-center justify-center text-primary-400 mb-6 group-hover:scale-110 transition-all duration-500 border-2 border-white/10">
+                  <Icon className="w-8 h-8" />
+               </div>
+            ) : (
+               <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-primary-500/20 to-secondary-500/20 backdrop-blur-sm mb-6 border-2 border-white/10" />
+            )}
 
             <h3
                className="text-2xl font-display font-bold text-secondary-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"

@@ -365,12 +365,11 @@ const Navbar = () => {
                   href={`https://wa.me/${whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative group px-7 py-3 overflow-hidden rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(13,139,242,0.2)] hover:shadow-[0_0_25px_rgba(13,139,242,0.4)] active:scale-95"
+                  className="relative group px-8 py-3.5 overflow-hidden rounded-[20px] font-black text-xs uppercase tracking-[0.2em] transition-all shadow-[0_0_30px_rgba(14,165,233,0.3)] hover:shadow-[0_0_50px_rgba(14,165,233,0.5)] active:scale-95 bg-primary-500 text-white"
                >
-                  <div className="absolute inset-0 bg-linear-to-r from-primary-600 to-primary-500 transition-transform duration-300 group-hover:scale-105" />
-                  <div className="relative flex items-center gap-2 text-white">
+                  <div className="relative flex items-center gap-2">
                      Konsultasi Gratis
-                     <ArrowUpRight className="w-4 h-4 translate-y-0.5 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+                     <ArrowUpRight className="w-4 h-4 translate-y-0.5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
                   </div>
                </a>
             </div>
