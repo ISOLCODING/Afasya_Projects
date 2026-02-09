@@ -346,16 +346,7 @@ const Home = () => {
                                     {postsData.map((post, index) => (
                                        <BlogCard
                                           key={post.id}
-                                          post={{
-                                             id: post.id,
-                                             title: post.title,
-                                             slug: post.slug,
-                                             excerpt: post.excerpt || post.content?.substring(0, 150) + '...',
-                                             image_url: post.featured_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070',
-                                             category: post.category?.name || 'Digital',
-                                             author: post.author?.name || 'Admin',
-                                             published_at: post.published_at || post.created_at
-                                          }}
+                                          post={post}
                                           index={index}
                                        />
                                     ))}

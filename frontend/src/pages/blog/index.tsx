@@ -8,19 +8,7 @@ import BlogCard from '@/components/ui/BlogCard';
 import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
 
-interface Post {
-   id: number;
-   title: string;
-   slug: string;
-   excerpt?: string;
-   content?: string;
-   image_url?: string;
-   author: string;
-   category: string;
-   status: string;
-   published_at: string;
-   view_count: number;
-}
+import type { Post } from '@/lib/api/types';
 
 const BlogPage = () => {
    const [currentPage, setCurrentPage] = useState(1);
@@ -31,13 +19,8 @@ const BlogPage = () => {
       queryFn: async () => {
          try {
             const response = await getPosts();
-            if (Array.isArray(response)) {
-               return response.filter(post => post.status === 'published');
-            } else if (response && response.data) {
-               const data = response.data;
-               return Array.isArray(data)
-                  ? data.filter((post: Post) => post.status === 'published')
-                  : (Array.isArray(data.items) ? data.items.filter((p: Post) => p.status === 'published') : []);
+            if (response.success && response.data) {
+               return response.data;
             }
             return [];
          } catch (error) {
@@ -201,7 +184,7 @@ const BlogPage = () => {
 
             {/* Mini CTA */}
             <Section className="pb-32">
-               <div className="bg-gradient-to-r from-secondary-900 to-secondary-950 rounded-[48px] p-8 md:p-16 relative overflow-hidden group">
+               <div className="bg-linear-to-r from-secondary-900 to-secondary-950 rounded-[48px] p-8 md:p-16 relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-primary-600/10 rounded-full blur-[80px] -mr-32 -mt-32 transition-transform duration-700 group-hover:scale-150" />
                   <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
                      <div className="text-center lg:text-left">

@@ -5,16 +5,7 @@ import { getStorageUrl } from '@/lib/utils';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 
-interface Post {
-   id: number;
-   title: string;
-   slug: string;
-   excerpt?: string;
-   image_url?: string;
-   author: string;
-   category: string;
-   published_at: string;
-}
+import type { Post } from '@/lib/api/types';
 
 interface BlogCardProps {
    post: Post;
@@ -39,9 +30,9 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
          className="group glass-card bg-white/80 dark:bg-neutral-900/60 backdrop-blur-xl rounded-[32px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-sm hover:shadow-[0_20px_50px_rgba(8,112,184,0.1)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 flex flex-col h-full"
       >
          <Link to={`/blog/${post.slug}`} className="relative h-64 overflow-hidden block">
-            {post.image_url ? (
+            {post.featured_image ? (
                <motion.img
-                  src={getStorageUrl(post.image_url)}
+                  src={getStorageUrl(post.featured_image)}
                   alt={post.title}
                   className="w-full h-full object-cover transition-transform duration-700"
                   whileHover={{ scale: 1.1 }}
@@ -74,7 +65,7 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
                <div className="w-1 h-1 rounded-full bg-neutral-200 dark:bg-neutral-800" />
                <div className="flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-primary-500" />
-                  <span>{post.author}</span>
+                  <span>{post.author.name}</span>
                </div>
             </div>
 
