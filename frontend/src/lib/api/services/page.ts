@@ -2,7 +2,6 @@
 import apiClient from '../client';
 
 export const getPage = async (slug: string) => {
-  console.log(`📄 Fetching page "${slug}"...`);
   try {
     const response = await apiClient.get(`/pages/${slug}`);
     const data = response.data;

@@ -2,7 +2,6 @@
 import apiClient from '../client';
 
 export const getPortfolios = async (params: any = {}) => {
-  console.log('🎨 Fetching portfolios...', params);
   try {
     const response = await apiClient.get('/portfolios', { params });
     const data = response.data;

@@ -11,9 +11,8 @@ interface ApiError {
 
 // Pastikan environment variable benar
 // Gunakan relative path agar request melewati Vite Proxy
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
-console.log('🌐 API Base URL:', API_BASE_URL);
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -27,8 +26,6 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
-    
     const token = localStorage.getItem('auth_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -44,7 +41,6 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(`✅ API Response ${response.status}: ${response.config.url}`);
     return response;
   },
   (error: AxiosError) => {

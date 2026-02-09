@@ -7,6 +7,9 @@ import BrandModal from '../ui/BrandModal';
 import { useState, useEffect } from 'react';
 
 interface BrandScrollerProps {
+   brands?: Brand[];
+   isLoading?: boolean;
+   error?: Error | null;
    title?: string;
    subtitle?: string;
    description?: string;
@@ -14,13 +17,15 @@ interface BrandScrollerProps {
 }
 
 const BrandScroller: React.FC<BrandScrollerProps> = ({
+   brands: externalBrands,
+   isLoading: externalLoading,
    title = "Partner Collaboration",
    subtitle = "Dipercaya Oleh Brand Ternama",
    description = "Kami bangga bekerja sama dengan perusahaan-perusahaan inovatif untuk menghadirkan solusi digital terbaik.",
    className
 }) => {
-   const [brands, setBrands] = useState<Brand[]>([]);
-   const [loading, setLoading] = useState(true);
+   const [internalBrands, setInternalBrands] = useState<Brand[]>([]);
+   const [internalLoading, setInternalLoading] = useState(true);
    const [isPlaying, setIsPlaying] = useState(true);
    const [speed, setSpeed] = useState<number>(30); // Base duration in seconds
    const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
@@ -36,14 +41,16 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
    ];
 
    useEffect(() => {
+      if (externalBrands) return; // Skip fetch if external data provided
+
       const fetchBrands = async () => {
          try {
             const response = await getBrands();
             if (response.success && response.data.length > 0) {
-               setBrands(response.data);
+               setInternalBrands(response.data);
             } else {
                // Use placeholders with better looking URLs if empty
-               setBrands(defaultBrands.map((b, i) => ({
+               setInternalBrands(defaultBrands.map((b) => ({
                   ...b,
                   logo_url: `https://api.dicebear.com/7.x/initials/svg?seed=${b.name}&backgroundColor=0ea5e9&fontFamily=Arial&fontWeight=bold`
                })));
@@ -51,11 +58,14 @@ const BrandScroller: React.FC<BrandScrollerProps> = ({
          } catch (error) {
             console.error("Error fetching brands", error);
          } finally {
-            setLoading(false);
+            setInternalLoading(false);
          }
       };
       fetchBrands();
-   }, []);
+   }, [externalBrands]);
+
+   const brands = externalBrands || internalBrands;
+   const loading = externalBrands ? (externalLoading ?? false) : internalLoading;
 
    useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {

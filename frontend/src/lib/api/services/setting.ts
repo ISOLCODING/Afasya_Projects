@@ -2,11 +2,9 @@
 import apiClient from '../client';
 
 export const getSettings = async () => {
-  console.log('⚙️ Fetching settings...');
   try {
     const response = await apiClient.get('/settings');
     const data = response.data;
-    console.log('✅ Settings API Response:', data);
     
     if (data.status === 'success') {
       return {

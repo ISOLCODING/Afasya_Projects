@@ -2,7 +2,6 @@
 import apiClient from '../client';
 
 export const getPosts = async (params: any = {}) => {
-  console.log('📝 Fetching posts...', params);
   try {
     const response = await apiClient.get('/posts', { params });
     const data = response.data;

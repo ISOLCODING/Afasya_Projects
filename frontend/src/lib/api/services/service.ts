@@ -2,7 +2,6 @@
 import apiClient from '../client';
 
 export const getServices = async () => {
-  console.log('🛠️ Fetching services...');
   try {
     const response = await apiClient.get('/services');
     const data = response.data;

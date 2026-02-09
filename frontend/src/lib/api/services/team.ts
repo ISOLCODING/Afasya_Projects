@@ -2,7 +2,6 @@
 import apiClient from '../client';
 
 export const getTeam = async () => {
-  console.log('👥 Fetching team...');
   try {
     const response = await apiClient.get('/team');
     const data = response.data;
