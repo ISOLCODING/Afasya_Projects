@@ -16,6 +16,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import Section from '@/components/layout/Section';
 import { getPostBySlug } from '@/lib/api';
 import { getStorageUrl } from '@/lib/utils';
+import type { Post } from '@/lib/api/types';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const BlogDetail = () => {
@@ -31,7 +32,7 @@ const BlogDetail = () => {
       enabled: !!slug,
    });
 
-   const post = response?.success ? response.data : null;
+   const post = response?.success ? (response.data as Post) : null;
 
    const formatDate = (dateString: string) => {
       try {
@@ -107,7 +108,7 @@ const BlogDetail = () => {
                   >
                      <div className="flex items-center gap-2">
                         <User className="w-5 h-5 text-primary-500" />
-                        <span>{post.author}</span>
+                        <span>{post.author.name}</span>
                      </div>
                      <div className="flex items-center gap-2">
                         <Calendar className="w-5 h-5 text-primary-500" />
@@ -132,11 +133,13 @@ const BlogDetail = () => {
                      animate={{ opacity: 1, y: 0 }}
                      className="mb-10 rounded-[32px] overflow-hidden shadow-2xl"
                   >
-                     <img
-                        src={getStorageUrl(post.image_url)}
-                        alt={post.title}
-                        className="w-full aspect-video object-cover"
-                     />
+                     {post.featured_image && (
+                        <img
+                           src={getStorageUrl(post.featured_image)}
+                           alt={post.title}
+                           className="w-full aspect-video object-cover"
+                        />
+                     )}
                   </motion.div>
 
                   <div className="prose prose-lg max-w-none prose-primary prose-headings:font-display prose-headings:font-bold prose-p:text-secondary-600 prose-img:rounded-3xl">
@@ -185,15 +188,22 @@ const BlogDetail = () => {
                         </form>
                      </div>
 
-                     {/* Authors Info */}
                      <div className="p-8 border border-secondary-100 rounded-[32px] bg-secondary-50">
                         <h4 className="font-bold text-secondary-900 mb-6">Penulis</h4>
                         <div className="flex items-center gap-4">
-                           <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-xl uppercase">
-                              {post.author.charAt(0)}
-                           </div>
+                           {post.author.avatar ? (
+                              <img
+                                 src={getStorageUrl(post.author.avatar)}
+                                 alt={post.author.name}
+                                 className="w-16 h-16 rounded-full object-cover"
+                              />
+                           ) : (
+                                 <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-xl uppercase">
+                                    {post.author.name.charAt(0)}
+                                 </div>
+                           )}
                            <div>
-                              <div className="font-bold text-secondary-900">{post.author}</div>
+                              <div className="font-bold text-secondary-900">{post.author.name}</div>
                               <div className="text-sm text-secondary-500">Content Strategist</div>
                            </div>
                         </div>
