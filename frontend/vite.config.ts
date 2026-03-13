@@ -39,6 +39,21 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'framer-motion',
+      'lucide-react',
+      '@tanstack/react-query',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-navigation-menu',
+      '@radix-ui/react-icons',
+      'class-variance-authority'
+    ],
+    force: true
+  },
   server: {
     port: 3000,
     host: true,

@@ -168,6 +168,7 @@
     html {
       scroll-behavior: smooth;
       color-scheme: light;
+      background-color: var(--color-secondary-950);
     }
     
     html.dark {
@@ -526,14 +527,14 @@ background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255,
 
 /* Section & Layout */
 .section-padding {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 3rem;
+    padding-bottom: 3rem;
 }
 
 @media (min-width: 768px) {
 .section-padding {
-padding-top: 8rem;
-  padding-bottom: 8rem;
+padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 }
 

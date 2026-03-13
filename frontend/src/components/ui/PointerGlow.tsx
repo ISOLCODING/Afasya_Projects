@@ -28,7 +28,7 @@ const PointerGlow = () => {
                 translateX: '-50%',
                 translateY: '-50%',
             }}
-            className="fixed pointer-events-none z-[9999] w-[400px] h-[400px] bg-primary-500/10 dark:bg-primary-500/20 rounded-full blur-[100px] mix-blend-soft-light"
+            className="fixed pointer-events-none z-9999 w-[400px] h-[400px] bg-primary-500/10 dark:bg-primary-500/20 rounded-full blur-[100px] mix-blend-soft-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}

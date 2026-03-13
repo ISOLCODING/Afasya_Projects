@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\ContentPage;
+use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ContentPageSeeder extends Seeder
@@ -11,9 +13,25 @@ class ContentPageSeeder extends Seeder
     public function run(): void
     {
         // Truncate existing data to avoid duplicates
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        Schema::disableForeignKeyConstraints();
         ContentPage::truncate();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        Schema::enableForeignKeyConstraints();
+
+        // Fetch Site Settings
+        $contactEmail = SiteSetting::where('key', 'contact_email')->value('value') ?? 'hello@afasya.com';
+        $contactPhone = SiteSetting::where('key', 'contact_phone')->value('value') ?? '+62 812-3456-7890';
+        $contactAddress = SiteSetting::where('key', 'contact_address')->value('value') ?? 'Jl. Default No. 1, Jakarta';
+        $contactMap = SiteSetting::where('key', 'contact_map_embed')->value('value') ?? '';
+
+        $socialJson = SiteSetting::where('key', 'social_links')->value('value');
+        $socialLinks = $socialJson ? json_decode($socialJson, true) : [];
+
+        $formattedSocials = [];
+        if (is_array($socialLinks)) {
+            foreach ($socialLinks as $platform => $url) {
+                $formattedSocials[] = ['platform' => $platform, 'url' => $url];
+            }
+        }
 
         $pages = [
             [
@@ -247,7 +265,12 @@ class ContentPageSeeder extends Seeder
                         'type' => 'contact_form',
                         'data' => [
                             'title' => 'Kirim Pesan',
-                            'description' => 'Tim kami akan merespons pesan Anda dalam waktu kurang dari 24 jam.'
+                            'description' => 'Tim kami akan merespons pesan Anda dalam waktu kurang dari 24 jam.',
+                            'address' => $contactAddress,
+                            'email' => $contactEmail,
+                            'phone' => $contactPhone,
+                            'map_embed' => $contactMap,
+                            'socials' => $formattedSocials
                         ]
                     ]
                 ],
@@ -349,7 +372,7 @@ class ContentPageSeeder extends Seeder
                 ],
                 'page_type' => 'team',
                 'template' => 'team',
-                'is_in_menu' => true,
+                'is_in_menu' => false,
                 'menu_order' => 6,
             ]
         ];

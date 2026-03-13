@@ -20,6 +20,11 @@ import { cn, getStorageUrl } from '@/lib/utils';
 import React from 'react';
 import ServiceTypeShowcase from '@/components/services/ServiceTypeShowcase';
 import ServiceDetailsTabs from '@/components/services/ServiceDetailsTabs';
+import AnimatedGridPattern from '@/components/ui/AnimatedGridPattern';
+import Beams from '@/components/ui/Beams';
+import TextGenerateEffect from '@/components/ui/TextGenerateEffect';
+import Magnetic from '@/components/ui/Magnetic';
+import GlowSeparator from '@/components/ui/GlowSeparator';
 
 
 const BrandsMarqueeBlock = ({ data }: { data: any }) => (
@@ -46,72 +51,85 @@ const RichTextBlock = ({ data }: { data: any }) => (
 );
 
 const HeroBlock = ({ data }: { data: any }) => (
-   <section className="relative pt-32 pb-20 overflow-hidden bg-secondary-950 border-b border-white/5">
-      {/* Background decoration */}
-      <div className="absolute inset-0 z-0">
-         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-glow" />
-         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-600/10 rounded-full blur-[100px] mix-blend-screen" />
-         <div className="absolute inset-0 bg-grid-tech opacity-10 pointer-events-none" />
+   <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-amber-50/50 dark:bg-neutral-950 border-b border-stone-200 dark:border-white/5">
+      {/* Background decoration - Beams */}
+      <div className="absolute inset-0 z-0 bg-amber-50/50 dark:bg-neutral-950 transition-colors duration-500">
+         <Beams
+            className="absolute inset-0 h-full w-full opacity-40 dark:opacity-60"
+            count={25}
+            minSpeed={0.4}
+            maxSpeed={2.0}
+            rotation={-30}
+            width={70}
+            intensity={0.6}
+            color="#a8a29e" // Stone-400 for warm organic feel in light mode
+         />
+         {/* Vignette Overlay - Warm Cream Falloff */}
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(255,251,235,0.8)_80%,rgba(255,251,235,1)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_20%,rgba(10,10,10,0.8)_80%,rgba(10,10,10,1)_100%)] pointer-events-none" />
       </div>
 
-      <div className="container-custom relative z-10">
-         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-               initial={{ opacity: 0, x: -30 }}
-               whileInView={{ opacity: 1, x: 0 }}
-               viewport={{ once: true }}
-            >
-               <motion.h1
-                  className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-white mb-8 leading-[1.1] tracking-tight drop-shadow-lg"
-                  dangerouslySetInnerHTML={{ __html: data.title }}
-               />
+      <div className="container-custom relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto px-6">
 
-               {data.subtitle && (
-                  <motion.div
-                     initial={{ opacity: 0, y: 20 }}
-                     whileInView={{ opacity: 1, y: 0 }}
-                     viewport={{ once: true }}
-                     transition={{ delay: 0.1 }}
-                     className="text-xl md:text-2xl text-secondary-300 mb-10 max-w-xl leading-relaxed font-medium"
-                     dangerouslySetInnerHTML={{ __html: data.subtitle }}
-                  />
-               )}
+         {/* "New Background" Badge - Fresher Look */}
+         <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
+         >
+            <div className="group relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 dark:bg-white/5 border border-neutral-200 dark:border-white/10 backdrop-blur-md text-sm font-medium text-neutral-600 dark:text-neutral-300 shadow-sm transition-all hover:bg-white/80 dark:hover:bg-white/10 cursor-default">
+               <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+               </span>
+               <span className="tracking-wide text-xs uppercase font-bold text-neutral-800 dark:text-white">v2.0 Available</span>
+            </div>
+         </motion.div>
 
-               {data.cta_text && data.cta_link && (
-                  <motion.div
-                     initial={{ opacity: 0, y: 20 }}
-                     whileInView={{ opacity: 1, y: 0 }}
-                     viewport={{ once: true }}
-                     transition={{ delay: 0.2 }}
-                  >
-                     <Link to={data.cta_link} className="btn btn-primary px-10 h-16 text-lg shadow-glow hover:shadow-glow-lg transition-all rounded-2xl group">
-                        {data.cta_text}
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                     </Link>
-                  </motion.div>
-               )}
-            </motion.div>
+         <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+         >
+            {/* Main Title - Huge & Clean & Modern Font */}
+            <h1
+               className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 leading-[1.05] tracking-tight drop-shadow-lg text-transparent bg-clip-text bg-gradient-to-br from-neutral-900 via-neutral-700 to-neutral-500 dark:from-white dark:via-neutral-200 dark:to-neutral-500"
+               dangerouslySetInnerHTML={{ __html: data.title }}
+            />
 
-            {data.image && (
+            {/* Subtitle - Centered & Readable */}
+            {data.subtitle && (
+               <div className="text-lg md:text-2xl text-neutral-600 dark:text-neutral-400 mb-12 max-w-3xl mx-auto leading-relaxed font-normal">
+                  <TextGenerateEffect words={data.subtitle.replace(/<[^>]*>/g, '')} />
+               </div>
+            )}
+
+            {/* CTAs - Centered Double Button Layout */}
+            {data.cta_text && data.cta_link && (
                <motion.div
-                  initial={{ opacity: 0, scale: 0.9, x: 30 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="relative group"
+                  transition={{ delay: 0.2 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4"
                >
-                  <div className="absolute -inset-4 bg-primary-500/20 rounded-[48px] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="relative rounded-[40px] overflow-hidden shadow-2xl border border-white/10 glass-card bg-secondary-900/50 p-2">
-                     <div className="rounded-[32px] overflow-hidden">
-                        <img
-                           src={getStorageUrl(data.image)}
-                           alt={data.title?.replace(/<[^>]*>/g, '') || "Hero image"}
-                           className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
-                        />
-                     </div>
-                  </div>
+                  {/* Primary CTA - Modern Gradient Button */}
+                  <Magnetic strength={50}>
+                     <Link to={data.cta_link} className="btn relative overflow-hidden bg-neutral-900 dark:bg-white text-white dark:text-black px-10 h-14 text-base font-bold transition-all rounded-full flex items-center justify-center min-w-[180px] shadow-[0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 hover:shadow-[0_0_30px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]">
+                        <span className="relative z-10">{data.cta_text}</span>
+                     </Link>
+                  </Magnetic>
+
+                  {/* Secondary CTA (Ghost/Glass) */}
+                  <Magnetic strength={50}>
+                     <Link to="/contact" className="btn bg-transparent text-neutral-900 dark:text-white border border-neutral-300 dark:border-white/20 px-10 h-14 text-base font-bold hover:bg-neutral-100 dark:hover:bg-white/10 backdrop-blur-sm transition-all rounded-full flex items-center justify-center min-w-[180px]">
+                        Let's Talk
+                     </Link>
+                  </Magnetic>
                </motion.div>
             )}
-         </div>
+         </motion.div>
       </div>
    </section>
 );
@@ -308,8 +326,12 @@ const TeamFlipGridBlock = ({ data }: { data: any }) => {
 
 const ContactFormBlock = ({ data }: { data: any }) => (
    <Section>
-      <div className="max-w-4xl mx-auto">
-         <ContactForm title={data.title} description={data.description} />
+      <div className="max-w-7xl mx-auto">
+         <ContactForm
+            title={data.title}
+            description={data.description}
+            data={data}
+         />
       </div>
    </Section>
 );
@@ -329,12 +351,14 @@ const CTABlock = ({ data }: { data: any }) => {
          )}>
             <div className="absolute inset-0 bg-grid-white/[0.05] pointer-events-none" />
             <h2 className="text-3xl md:text-5xl font-display font-extrabold mb-8 relative z-10">{data.title}</h2>
-            <Link to={data.button_link} className={cn(
-               "btn px-10 h-14 text-lg font-bold relative z-10 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1",
-               data.theme === 'light' ? 'btn-primary' : 'bg-white text-primary-700 hover:bg-secondary-50'
-            )}>
-               {data.button_text}
-            </Link>
+            <Magnetic strength={30}>
+               <Link to={data.button_link} className={cn(
+                  "btn px-10 h-14 text-lg font-bold relative z-10 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 inline-flex items-center justify-center",
+                  data.theme === 'light' ? 'btn-primary' : 'bg-white text-primary-700 hover:bg-secondary-50'
+               )}>
+                  {data.button_text}
+               </Link>
+            </Magnetic>
          </div>
       </Section>
    );
@@ -538,48 +562,48 @@ const ContentBlocks = ({ blocks }: { blocks: any[] }) => {
    if (!blocks || !Array.isArray(blocks)) return null;
 
    return (
-      <>
+      <div className="flex flex-col relative w-full">
          {blocks.map((block, index) => {
+            let BlockComponent = null;
+
             switch (block.type) {
-               case 'rich_text':
-                  return <RichTextBlock key={index} data={block.data} />;
-               case 'hero':
-                  return <HeroBlock key={index} data={block.data} />;
-               case 'image_text':
-                  return <ImageTextBlock key={index} data={block.data} />;
-               case 'services_grid':
-                  return <ServicesGridBlock key={index} data={block.data} />;
-               case 'portfolio_grid':
-                  return <PortfolioGridBlock key={index} data={block.data} />;
-               case 'team_grid':
-                  return <TeamGridBlock key={index} data={block.data} />;
-               case 'blog_grid':
-                  return <BlogGridBlock key={index} data={block.data} />;
-               case 'timeline':
-                  return <TimelineBlock key={index} data={block.data} />;
-               case 'team_flip_grid':
-                  return <TeamFlipGridBlock key={index} data={block.data} />;
-               case 'contact_form':
-                  return <ContactFormBlock key={index} data={block.data} />;
-               case 'cta_section':
-                  return <CTABlock key={index} data={block.data} />;
-               case 'brands_marquee':
-                  return <BrandsMarqueeBlock key={index} data={block.data} />;
-               case 'pricing_grid':
-                  return <PricingBlock key={index} data={block.data} />;
-               case 'service_showcase':
-                  return <ServiceShowcaseBlock key={index} data={block.data} />;
-               case 'service_tabs':
-                  return <ServiceTabsBlock key={index} data={block.data} />;
-               case 'feature_grid':
-                  return <FeatureGridBlock key={index} data={block.data} />;
-               case 'stats_dark':
-                  return <StatsDarkBlock key={index} data={block.data} />;
-               default:
-                  return null;
+               case 'rich_text': BlockComponent = RichTextBlock; break;
+               case 'hero': BlockComponent = HeroBlock; break;
+               case 'image_text': BlockComponent = ImageTextBlock; break;
+               case 'services_grid': BlockComponent = ServicesGridBlock; break;
+               case 'portfolio_grid': BlockComponent = PortfolioGridBlock; break;
+               case 'team_grid': BlockComponent = TeamGridBlock; break;
+               case 'blog_grid': BlockComponent = BlogGridBlock; break;
+               case 'timeline': BlockComponent = TimelineBlock; break;
+               case 'team_flip_grid': BlockComponent = TeamFlipGridBlock; break;
+               case 'contact_form': BlockComponent = ContactFormBlock; break;
+               case 'cta_section': BlockComponent = CTABlock; break;
+               case 'brands_marquee': BlockComponent = BrandsMarqueeBlock; break;
+               case 'pricing_grid': BlockComponent = PricingBlock; break;
+               case 'service_showcase': BlockComponent = ServiceShowcaseBlock; break;
+               case 'service_tabs': BlockComponent = ServiceTabsBlock; break;
+               case 'feature_grid': BlockComponent = FeatureGridBlock; break;
+               case 'stats_dark': BlockComponent = StatsDarkBlock; break;
+               default: BlockComponent = () => null;
             }
+
+            const isLast = index === blocks.length - 1;
+
+            return (
+               <React.Fragment key={index}>
+                  <div className="relative z-10 block-section">
+                     <BlockComponent data={block.data} />
+                  </div>
+
+                  {!isLast && (
+                     <div className="relative w-full z-20 py-12 md:py-20 flex justify-center items-center pointer-events-none select-none overflow-hidden">
+                        <GlowSeparator className="w-full opacity-60" />
+                     </div>
+                  )}
+               </React.Fragment>
+            );
          })}
-      </>
+      </div>
    );
 };
 

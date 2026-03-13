@@ -8,6 +8,7 @@ import Footer from './Footer';
 import { getSettings } from '@/lib/api';
 import { getStorageUrl } from '@/lib/utils';
 import PointerGlow from '../ui/PointerGlow';
+import Particles from '../ui/Particles';
 
 interface PageLayoutProps {
    children: ReactNode;
@@ -62,9 +63,19 @@ const PageLayout = ({ children }: PageLayoutProps) => {
                className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent-600/5 dark:bg-accent-600/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-float"
             />
 
-            {/* Decorative Lines */}
             <div className="absolute top-[20%] left-[5%] w-px h-32 bg-linear-to-b from-transparent via-primary-500/20 to-transparent" />
             <div className="absolute bottom-[20%] right-[5%] w-px h-32 bg-linear-to-b from-transparent via-accent-500/20 to-transparent" />
+
+            {/* React Bits - Particles Background */}
+            <div className="absolute inset-0 z-0 opacity-30">
+               <Particles
+                  className="absolute inset-0"
+                  quantity={50}
+                  staticity={50}
+                  ease={50}
+                  color="#3b82f6"
+               />
+            </div>
          </div>
 
          {/* Cursor Glow Effect */}
@@ -88,7 +99,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
          </main>
 
          {/* Footer Area */}
-         <footer className="relative z-10">
+         <footer className="relative z-10 bg-secondary-950 mt-auto">
             <Footer />
          </footer>
       </div>

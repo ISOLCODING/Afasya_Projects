@@ -175,7 +175,7 @@ const ServiceDetail = () => {
                                 className="absolute -bottom-10 -left-10 bg-white/90 dark:bg-secondary-900/80 backdrop-blur-xl border border-white/20 dark:border-white/10 p-6 rounded-3xl shadow-xl dark:shadow-2xl z-20 min-w-[240px]"
                             >
                                 <div className="flex items-center gap-4 mb-3">
-                                    <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                                    <div className="relative w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                                         <Clock size={20} className="text-white relative z-10" />
                                         <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse" />
                                     </div>

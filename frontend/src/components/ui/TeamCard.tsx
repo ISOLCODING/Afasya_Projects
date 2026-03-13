@@ -32,15 +32,15 @@ const TeamCard = ({ name, position, image, photoUrl, initials, bio, socialLinks,
          transition={{ duration: 0.5, delay: index * 0.1 }}
          className="group relative"
       >
-         <div className="relative aspect-4/5 rounded-[32px] overflow-hidden mb-6 shadow-lg group-hover:shadow-2xl transition-all duration-500 bg-neutral-50 dark:bg-secondary-900">
+         <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden mb-6 shadow-lg group-hover:shadow-2xl transition-all duration-500 bg-zinc-50 dark:bg-white/5 border border-zinc-100 dark:border-white/10">
             {displayImage ? (
                <img
                   src={getStorageUrl(displayImage)}
                   alt={name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                />
             ) : (
-                  <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-neutral-200 dark:text-secondary-700 uppercase">
+                  <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-zinc-300 dark:text-zinc-700 uppercase">
                   {initials || (name ? name.substring(0, 2) : '??')}
                </div>
             )}

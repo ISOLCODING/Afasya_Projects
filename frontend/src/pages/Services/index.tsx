@@ -1,9 +1,10 @@
-// src/pages/Services/index.tsx
 import { useQuery } from '@tanstack/react-query';
 import PageLayout from '@/components/layout/PageLayout';
 import ContentBlocks from '@/components/sections/ContentBlocks';
-import { getPage } from '@/lib/api';
+import { getPage, getServices } from '@/lib/api';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Carousel3D from '@/components/layout/Carousel3D';
+import { getIconByName } from '@/lib/icons';
 
 const ServicesPage = () => {
    const { data: pageResponse, isLoading: pageLoading, error: pageError } = useQuery({

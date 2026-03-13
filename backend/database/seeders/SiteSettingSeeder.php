@@ -39,10 +39,24 @@ class SiteSettingSeeder extends Seeder
                 'is_public' => true,
             ],
             [
+                'key' => 'contact_address',
+                'value' => 'Jl. TARUMAJAYA PERUMAHAN BOJONG MAS INDAH KAB BEKASI',
+                'type' => 'text',
+                'group_name' => 'contact',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'contact_map_embed',
+                'value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.1191382176416!2d106.9995681758529!3d-6.114659693871923!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6a21c789ffe88f%3A0x4412fe0b36477f46!2sWarung%20mama%20faish!5e0!3m2!1sid!2sid!4v1770752168051!5m2!1sid!2sid" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade',
+                'type' => 'url',
+                'group_name' => 'contact',
+                'is_public' => true,
+            ],
+            [
                 'key' => 'social_links',
                 'value' => json_encode([
-                    'instagram' => 'https://instagram.com/faishol_store',
-                    'linkedin' => 'https://linkedin.com/company/afasya_projects',
+                    'instagram' => 'https://instagram.com/afasyazynex',
+                    'linkedin' => 'https://linkedin.com/company/afasyazynex',
                 ]),
                 'type' => 'json',
                 'group_name' => 'social',

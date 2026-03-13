@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import { type LucideIcon, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import React from 'react';
@@ -61,6 +61,20 @@ const ServiceCard = ({ title, description, icon: Icon, slug, image, index, start
          {/* Premium Glow Effect on Hover */}
          <div className="absolute inset-0 bg-linear-to-br from-primary-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
          <div className="absolute -inset-full bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer pointer-events-none" />
+
+         {/* Spotlight Effect */}
+         <motion.div
+            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-10"
+            style={{
+               background: useMotionTemplate`
+                  radial-gradient(
+                     650px circle at ${mouseXSpring.get() * 100 + 50}% ${mouseYSpring.get() * 100 + 50}%,
+                     rgba(14, 165, 233, 0.15),
+                     transparent 80%
+                  )
+               `,
+            }}
+         />
 
          <div
             style={{ transform: "translateZ(50px)" }}

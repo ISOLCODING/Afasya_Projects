@@ -1,5 +1,6 @@
 // src/components/ui/PortfolioCard.tsx
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
+import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getStorageUrl } from '@/lib/utils';
@@ -13,17 +14,43 @@ interface PortfolioCardProps {
 }
 
 const PortfolioCard = ({ title, category, image, slug, index }: PortfolioCardProps) => {
+
+   const mouseX = useMotionValue(0);
+   const mouseY = useMotionValue(0);
+
+   function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+      const { left, top } = currentTarget.getBoundingClientRect();
+      mouseX.set(clientX - left);
+      mouseY.set(clientY - top);
+   }
+
    return (
       <motion.div
          initial={{ opacity: 0, y: 30 }}
          whileInView={{ opacity: 1, y: 0 }}
          viewport={{ once: true }}
          transition={{ duration: 0.6, delay: index * 0.1 }}
+         onMouseMove={handleMouseMove}
          className="group relative bg-neutral-900 aspect-4/5 md:aspect-3/4 overflow-hidden rounded-[40px] shadow-2xl transition-all duration-700 hover:shadow-primary-500/20 border border-white/10 hover:border-white/30"
       >
          {/* Premium Glow Effect on Hover */}
          <div className="absolute inset-0 bg-linear-to-br from-primary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
          <div className="absolute -inset-full bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer pointer-events-none" />
+
+         {/* Spotlight Effect */}
+         <motion.div
+            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-10"
+            style={{
+               background: useMotionTemplate`
+                  radial-gradient(
+                     650px circle at ${mouseX}px ${mouseY}px,
+                     rgba(14, 165, 233, 0.15),
+                     transparent 80%
+                  )
+               `,
+            }}
+         />
+
          <div className="absolute inset-0 z-10 bg-linear-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
          <Link to={`/portfolio/${slug}`} className="absolute inset-0 z-20" aria-label={`View ${title}`} />
 

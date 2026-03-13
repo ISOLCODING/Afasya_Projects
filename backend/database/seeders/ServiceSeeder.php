@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Service;
 use App\Models\ServiceFeature;
 use App\Models\ServicePackage;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ServiceSeeder extends Seeder
@@ -13,11 +14,11 @@ class ServiceSeeder extends Seeder
     public function run(): void
     {
         // Truncate existing data to avoid duplicates
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        Schema::disableForeignKeyConstraints();
         ServiceFeature::truncate();
         ServicePackage::truncate();
         Service::truncate();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        Schema::enableForeignKeyConstraints();
 
         $services = [
             [
