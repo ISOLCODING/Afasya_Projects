@@ -59,6 +59,9 @@ class ContentPage extends Model implements HasMedia
         return $this->belongsTo(ContentPage::class, 'parent_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function children(): HasMany
     {
         return $this->hasMany(ContentPage::class, 'parent_id')->orderBy('menu_order');

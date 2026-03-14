@@ -57,11 +57,17 @@ class Service extends Model implements HasMedia
             ->saveSlugsTo('slug');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function features(): HasMany
     {
         return $this->hasMany(ServiceFeature::class)->orderBy('display_order');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function packages(): HasMany
     {
         return $this->hasMany(ServicePackage::class)->orderBy('display_order');
@@ -77,6 +83,9 @@ class Service extends Model implements HasMedia
         return $this->hasMany(Client::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function faqs(): HasMany
     {
         return $this->hasMany(FAQ::class)->orderBy('display_order');

@@ -41,6 +41,9 @@ class Team extends Model implements HasMedia
         'join_date' => 'date',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function expertises(): HasMany
     {
         return $this->hasMany(TeamExpertise::class)->orderBy('display_order');

@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\V1\UserDashboardController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\SupportFaqController;
 
-Route::prefix('v1')->group(function () {
+Route::group(['prefix' => 'v1'], function () {
     // Auth Routes
     Route::post('/login', [AuthController::class, 'login']);
 

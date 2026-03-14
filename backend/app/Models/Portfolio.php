@@ -85,6 +85,9 @@ class Portfolio extends Model implements HasMedia
         return $this->belongsTo(Client::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function images(): HasMany
     {
         return $this->hasMany(PortfolioImage::class)->orderBy('display_order');
