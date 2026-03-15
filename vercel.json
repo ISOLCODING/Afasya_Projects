@@ -1,11 +1,5 @@
 {
     "version": 2,
-    "functions": {
-        "api/index.php": {
-            "runtime": "vercel-php@latest",
-            "maxDuration": 30
-        }
-    },
     "builds": [
         {
             "src": "api/index.php",
