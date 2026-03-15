@@ -18,9 +18,9 @@ backend/storage/app/public/*
 backend/bootstrap/cache/*
 backend/tests
 
-# Frontend source - hanya butuh dist/
+# Frontend source - only dist is needed in production builds, but we must include source for Vercel build
 frontend/node_modules
-frontend/src
+# frontend/src   <-- kept in repo to allow Vercel build; do not ignore
 frontend/.env
 
 # Docs
