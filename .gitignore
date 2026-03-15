@@ -1,0 +1,16 @@
+.vercel
+node_modules
+.env
+.agent
+.agents
+vendor
+dist
+.DS_Store
+storage/*.key
+public/storage
+.phpunit.result.cache
+frontend/dist
+backend/vendor
+backend/node_modules
+frontend/node_modules
+*.log

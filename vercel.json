@@ -1,0 +1,55 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/index.php",
+            "use": "vercel-php@0.7.3",
+            "config": {
+                "maxLambdaSize": "15mb"
+            }
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "frontend/dist"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/index.php"
+        },
+        {
+            "src": "/sanctum/(.*)",
+            "dest": "/api/index.php"
+        },
+        {
+            "src": "/storage/(.*)",
+            "dest": "/api/index.php"
+        },
+        {
+            "src": "/docs/(.*)",
+            "dest": "/api/index.php"
+        },
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ],
+    "env": {
+        "APP_NAME": "Afasya Projects",
+        "APP_ENV": "production",
+        "APP_DEBUG": "false",
+        "CACHE_STORE": "array",
+        "SESSION_DRIVER": "cookie",
+        "QUEUE_CONNECTION": "sync",
+        "LOG_CHANNEL": "stderr",
+        "VIEW_COMPILED_PATH": "/tmp",
+        "FILESYSTEM_DISK": "public"
+    }
+}

@@ -1,0 +1,38 @@
+# Ignorasi file yang tidak perlu di-upload ke Vercel (root project)
+
+# Git
+.git
+
+# Node modules di root (jika ada)
+node_modules
+
+# Backend - files yang heavy tapi tidak dibutuhkan vercel runtime
+backend/node_modules
+backend/vendor
+backend/.env
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/app/public/*
+backend/bootstrap/cache/*
+backend/tests
+
+# Frontend source - hanya butuh dist/
+frontend/node_modules
+frontend/src
+frontend/.env
+
+# Docs
+docs
+
+# IDE & OS files
+.vscode
+.idea
+*.DS_Store
+Thumbs.db
+
+# Skills & agent files
+.agents
+.agent
+skills-lock.json
