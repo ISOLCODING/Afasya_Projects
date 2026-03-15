@@ -8,21 +8,11 @@
   ],
   "scripts": {
     "build": "npm run build:frontend",
-    "deploy": "vercel deploy . -y --no-wait",
-    "deploy:prod": "vercel deploy . -y --no-wait --prod",
-    "deploy:preview": "vercel deploy . -y --no-wait",
     "build:frontend": "npm run build --workspace=frontend",
     "build:backend": "cd backend && composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache && php artisan view:cache",
     "build:all": "npm run build:frontend",
-    "deploy:full": "npm run build:all && npm run deploy",
-    "deploy:full:prod": "npm run build:all && npm run deploy:prod",
-    "vercel:login": "vercel login",
-    "vercel:link": "vercel link --repo",
-    "vercel:ls": "vercel ls",
-    "vercel:inspect": "vercel inspect",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && php artisan serve",
-    "status": "vercel ls --format json"
+    "dev:backend": "cd backend && php artisan serve"
   },
   "engines": {
     "node": "22.x"
