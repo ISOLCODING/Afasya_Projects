@@ -1,9 +1,15 @@
 {
     "version": 2,
+    "functions": {
+        "api/index.php": {
+            "runtime": "vercel-php@latest",
+            "maxDuration": 30
+        }
+    },
     "builds": [
         {
             "src": "api/index.php",
-            "use": "vercel-php@0.7.3",
+            "use": "vercel-php@latest",
             "config": {
                 "maxLambdaSize": "15mb"
             }
