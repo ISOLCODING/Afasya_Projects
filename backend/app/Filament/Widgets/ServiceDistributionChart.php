@@ -13,9 +13,9 @@ class ServiceDistributionChart extends ChartWidget
     protected function getData(): array
     {
         $services = Service::all();
-        $activeCount = $services->where('is_active', true)->count();
-        $inactiveCount = $services->where('is_active', false)->count();
-        $featuredCount = $services->where('is_featured', true)->count();
+        $activeCount = $services->where('is_active', true)->count('*');
+        $inactiveCount = $services->where('is_active', false)->count('*');
+        $featuredCount = $services->where('is_featured', true)->count('*');
 
         return [
             'datasets' => [

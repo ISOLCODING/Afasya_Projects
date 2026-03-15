@@ -18,7 +18,7 @@ class AuthController extends Controller
             'device_name' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first(['*']);
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
@@ -26,7 +26,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'message' => 'Login berhasil',
             'data' => [
@@ -40,7 +40,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'message' => 'Logout berhasil'
         ]);
@@ -48,7 +48,7 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'data' => $request->user()
         ]);
@@ -65,7 +65,7 @@ class AuthController extends Controller
 
         $user->update($request->only('name', 'email'));
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'message' => 'Profil berhasil diperbarui',
             'data' => $user
@@ -83,7 +83,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'message' => 'Password berhasil diperbarui'
         ]);

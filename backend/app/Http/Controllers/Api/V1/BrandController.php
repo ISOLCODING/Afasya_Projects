@@ -14,7 +14,7 @@ class BrandController extends Controller
             ->orderBy('sort_order', 'asc')
             ->get();
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'message' => 'Brands retrieved successfully',
             'data' => $brands

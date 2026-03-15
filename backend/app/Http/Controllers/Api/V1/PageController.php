@@ -22,7 +22,7 @@ class PageController extends ApiController
             return $this->error('Page not found', 404);
         }
 
-        $page->increment('view_count');
+        $page->increment('view_count', 1);
 
         return $this->success([
             'title' => $page->title,

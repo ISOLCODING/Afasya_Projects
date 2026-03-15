@@ -112,7 +112,7 @@ class PortfolioForm
                                         DatePicker::make('completion_date'),
                                         DatePicker::make('launch_date'),
                                         DateTimePicker::make('published_at')
-                                            ->default(now()),
+                                            ->default(\Illuminate\Support\Carbon::now()),
                                     ])->columns(2),
                             ]),
 

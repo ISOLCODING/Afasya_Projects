@@ -78,7 +78,7 @@ class ClientForm
                                             ->required()
                                             ->default(5),
                                         DatePicker::make('testimonial_date')
-                                            ->default(now()),
+                                            ->default(\Illuminate\Support\Carbon::now()),
                                         TextInput::make('project_type')
                                             ->placeholder('e.g. Web Development'),
                                     ])->columns(2),

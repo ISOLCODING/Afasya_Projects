@@ -19,8 +19,8 @@ class SupportFaqController extends ApiController
         $serviceId = $request->query('service_id');
 
         $faqs = FAQ::where('is_active', true)
-            ->when($category, fn($q) => $q->where('category', $category))
-            ->when($serviceId, fn($q) => $q->where('service_id', $serviceId))
+            ->when($category, fn($q) => $q->where('category', '=', $category))
+            ->when($serviceId, fn($q) => $q->where('service_id', '=', $serviceId))
             ->orderBy('display_order', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -98,7 +98,7 @@ class SupportFaqController extends ApiController
         // --- 2. GREETINGS (Refined) ---
         if (Str::contains($message, ['halo', 'hi', 'selamat', 'pagi', 'siang', 'malam', 'assalamualaikum', 'permisi', 'hai'])) {
             $timeOfDay = 'hari ini';
-            $hour = now()->hour;
+            $hour = \Illuminate\Support\Carbon::now()->hour;
             if ($hour >= 5 && $hour < 11) $timeOfDay = 'pagi yang cerah ini';
             else if ($hour >= 11 && $hour < 15) $timeOfDay = 'siang ini';
             else if ($hour >= 15 && $hour < 19) $timeOfDay = 'sore ini';
@@ -164,7 +164,7 @@ class SupportFaqController extends ApiController
         // --- 9. FAQ SEARCH ---
         $faq = FAQ::where('is_active', true)
             ->whereRaw('LOWER(question) LIKE ?', ["%{$message}%"])
-            ->first();
+            ->first(['*']);
 
         if ($faq) {
             $text = "💡 **INFO FAQ: {$faq->question}**\n";
@@ -196,7 +196,7 @@ class SupportFaqController extends ApiController
     public function byCategory($category)
     {
         $faqs = FAQ::where('is_active', true)
-            ->where('category', $category)
+            ->where('category', '=', $category)
             ->orderBy('display_order', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -223,7 +223,7 @@ class SupportFaqController extends ApiController
     public function incrementView($uuid)
     {
         $faq = FAQ::where('uuid', $uuid)->firstOrFail();
-        $faq->increment('view_count');
+        $faq->increment('view_count', 1);
         
         return $this->success([
             'view_count' => $faq->view_count
@@ -240,9 +240,9 @@ class SupportFaqController extends ApiController
         $isHelpful = $request->input('helpful', true);
         
         if ($isHelpful) {
-            $faq->increment('helpful_yes');
+            $faq->increment('helpful_yes', 1);
         } else {
-            $faq->increment('helpful_no');
+            $faq->increment('helpful_no', 1);
         }
         
         return $this->success([

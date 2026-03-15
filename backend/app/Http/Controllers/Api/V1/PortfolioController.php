@@ -14,7 +14,7 @@ class PortfolioController extends ApiController
         $query = Portfolio::where('is_published', true);
 
         if ($request->has('category')) {
-            $query->where('category', $request->category);
+            $query->where('category', '=', $request->category);
         }
 
         if ($request->has('featured')) {
@@ -39,7 +39,7 @@ class PortfolioController extends ApiController
             return $this->error('Portfolio not found', 404);
         }
 
-        $portfolio->increment('views_count');
+        $portfolio->increment('views_count', 1);
         $portfolio->load('service');
 
         return $this->success(new PortfolioResource($portfolio));

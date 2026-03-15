@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ],
         ];
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'data' => [
                 'stats' => $stats,

@@ -41,7 +41,7 @@ class OrderController extends ApiController
         try {
             return DB::transaction(function () use ($request) {
                 // 1. Find or Create User based on email
-                $user = auth('sanctum')->user() ?: User::where('email', $request->client_email)->first();
+                $user = \Illuminate\Support\Facades\Auth::guard('sanctum')->user() ?: User::where('email', $request->client_email)->first(['*']);
 
                 if (!$user) {
                     $user = User::create([
@@ -124,8 +124,8 @@ class OrderController extends ApiController
                     'status' => 'active',
                     'progress' => 0,
                     'total_budget' => $order->amount,
-                    'start_date' => now(),
-                    'due_date' => now()->addDays($package->delivery_days ?? 7),
+                    'start_date' => \Illuminate\Support\Carbon::now(),
+                    'due_date' => \Illuminate\Support\Carbon::now()->addDays($package->delivery_days ?? 7),
                 ]);
 
                 // 4. Automatically Create UserPackage (Entitlement)
@@ -135,8 +135,8 @@ class OrderController extends ApiController
                         'user_id' => $order->user_id,
                         'service_package_id' => $package->id,
                         'status' => 'active',
-                        'started_at' => now(),
-                        'expired_at' => now()->addMonths(1), // Default 1 month access if subscription-based
+                        'started_at' => \Illuminate\Support\Carbon::now(),
+                        'expired_at' => \Illuminate\Support\Carbon::now()->addMonths(1), // Default 1 month access if subscription-based
                     ]
                 );
 

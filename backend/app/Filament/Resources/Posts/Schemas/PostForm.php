@@ -98,7 +98,7 @@ class PostForm
                                 Select::make('user_id')
                                     ->label('Penulis')
                                     ->relationship('user', 'name')
-                                    ->default(auth()->id())
+                                    ->default(\Illuminate\Support\Facades\Auth::id())
                                     ->required(),
                                 TextInput::make('category')
                                     ->label('Kategori'),

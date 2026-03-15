@@ -65,7 +65,7 @@ class OrdersTable
                             'service_package_id' => $record->service_package_id,
                             'order_id' => $record->id,
                             'status' => 'active',
-                            'started_at' => now(),
+                            'started_at' => \Illuminate\Support\Carbon::now(),
                             'expired_at' => null,
                         ]);
                     })

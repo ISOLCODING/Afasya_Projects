@@ -9,7 +9,7 @@ class ApiController extends Controller
 {
     protected function success(mixed $data, string $message = 'Success', int $code = 200): JsonResponse
     {
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'message' => $message,
             'data' => $data,
@@ -27,6 +27,6 @@ class ApiController extends Controller
             $response['errors'] = $errors;
         }
 
-        return response()->json($response, $code);
+        return \Illuminate\Support\Facades\Response::json($response, $code);
     }
 }

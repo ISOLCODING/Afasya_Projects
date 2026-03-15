@@ -10,14 +10,14 @@ class UserDashboardController extends Controller
 {
     public function userPackages()
     {
-        $userId = auth()->id() ?? 1; // Replace with auth()->id() when auth is fully ready
+        $userId = \Illuminate\Support\Facades\Auth::id() ?? 1; // Replace with \Illuminate\Support\Facades\Auth::id() when auth is fully ready
 
         $packages = UserPackage::with('servicePackage')
-            ->where('user_id', $userId)
+            ->where('user_id', '=', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'data' => $packages,
             'message' => 'User packages retrieved successfully',

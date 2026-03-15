@@ -10,7 +10,7 @@ class ServiceController extends ApiController
 {
     public function index(): JsonResponse
     {
-        $limit = request('limit');
+        $limit = \Illuminate\Support\Facades\Request::input('limit');
         $query = Service::where('is_active', true)
             ->orderBy('display_order');
 
@@ -29,7 +29,7 @@ class ServiceController extends ApiController
             return $this->error('Service not found', 404);
         }
 
-        $service->increment('view_count');
+        $service->increment('view_count', 1);
         $service->load(['features', 'packages']);
 
         return $this->success(new ServiceResource($service));

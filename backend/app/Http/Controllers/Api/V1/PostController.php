@@ -14,10 +14,10 @@ class PostController extends ApiController
         $category = $request->query('category');
         $limit = $request->query('limit', 10);
 
-        $query = Post::with('author')->where('status', 'published')->orderBy('published_at', 'desc');
+        $query = Post::with('author')->where('status', '=', 'published')->orderBy('published_at', 'desc');
 
         if ($category) {
-            $query->where('category', $category);
+            $query->where('category', '=', $category);
         }
 
         if ($request->has('featured')) {
@@ -40,11 +40,11 @@ class PostController extends ApiController
     public function show($slug): JsonResponse
     {
         $post = Post::with('author')
-            ->where('slug', $slug)
-            ->where('status', 'published')
+            ->where('slug', '=', $slug)
+            ->where('status', '=', 'published')
             ->firstOrFail();
 
-        $post->increment('views_count');
+        $post->increment('views_count', 1);
 
         return $this->success(new PostResource($post));
     }

@@ -10,7 +10,7 @@ class TeamController extends ApiController
 {
     public function index(): JsonResponse
     {
-        $limit = request('limit');
+        $limit = \Illuminate\Support\Facades\Request::input('limit');
 
         $query = Team::where('is_active', true)
             ->with('expertises')

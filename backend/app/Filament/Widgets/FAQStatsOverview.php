@@ -14,11 +14,11 @@ class FAQStatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $totalFaqs = FAQ::count();
-        $activeFaqs = FAQ::active()->count();
+        $activeFaqs = FAQ::active()->count('*');
         $totalViews = FAQ::sum('view_count');
         
-        $mostViewed = FAQ::active()->orderBy('view_count', 'desc')->first();
-        $mostHelpful = FAQ::active()->orderBy('helpful_yes', 'desc')->first();
+        $mostViewed = FAQ::active()->orderBy('view_count', 'desc')->first(['*']);
+        $mostHelpful = FAQ::active()->orderBy('helpful_yes', 'desc')->first(['*']);
 
         return [
             Stat::make('Total FAQs', "$activeFaqs / $totalFaqs")

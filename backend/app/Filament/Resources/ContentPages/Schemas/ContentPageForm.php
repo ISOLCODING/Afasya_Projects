@@ -245,7 +245,7 @@ class ContentPageForm
 
                                         DateTimePicker::make('published_at')
                                             ->label('Tanggal Publish')
-                                            ->default(now()),
+                                            ->default(\Illuminate\Support\Carbon::now()),
                                     ])->columns(2),
                             ]),
 

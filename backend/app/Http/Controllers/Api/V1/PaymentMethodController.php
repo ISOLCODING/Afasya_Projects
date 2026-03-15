@@ -25,7 +25,7 @@ class PaymentMethodController extends Controller
                 ];
             });
 
-        return response()->json([
+        return \Illuminate\Support\Facades\Response::json([
             'status' => 'success',
             'data' => $methods,
             'message' => 'Payment methods retrieved successfully',

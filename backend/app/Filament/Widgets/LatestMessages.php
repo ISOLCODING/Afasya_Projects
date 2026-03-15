@@ -18,7 +18,7 @@ class LatestMessages extends TableWidget
     {
         return $table
             ->query(
-                \App\Models\ContactMessage::query()->latest()->limit(5)
+                \App\Models\ContactMessage::query()->latest('created_at')->limit(5)
             )
             ->columns([
                 \Filament\Tables\Columns\TextColumn::make('name')
